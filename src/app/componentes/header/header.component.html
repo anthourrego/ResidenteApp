@@ -1,0 +1,18 @@
+<ion-header class="ion-no-border">
+	<ion-toolbar mode='ios' color="ligth">
+		<ion-buttons (click)="toggleMenu()" slot="start">
+			<ion-icon slot='icon-only' size='large' name='menu-outline'></ion-icon>
+		</ion-buttons>
+		<ion-title class="ion-text-capitalize">{{ titulo }}</ion-title>
+		<ion-buttons slot="end">
+			<ion-button routerLink="/modulos/notificaciones" *ngIf="verNotificacion">
+				<ion-icon slot="icon-only" size='large' name="notifications-circle-outline">
+				</ion-icon>
+				<ion-badge color="secondary">42</ion-badge>
+			</ion-button>
+			<ion-button>
+				<ion-icon slot='icon-only' size='large' name='person-circle-outline'></ion-icon>
+			</ion-button>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>

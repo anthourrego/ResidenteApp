@@ -1,0 +1,94 @@
+<ion-content [fullscreen]="true">
+	<div [style]="obtenerFondo()">
+		<div class="content">
+
+			<form [formGroup]="formLogin.formulario" *ngIf="ingresoDocumento">
+				<ion-item class="ion-margin-top" lines="none">
+					<ion-icon class="ion-margin-end" slot="start" name="card-outline"></ion-icon>
+					<ion-input formControlName="nroDocumento" type="text" placeholder="Número de documento"></ion-input>
+				</ion-item>
+				<ion-grid class="ion-no-margin">
+					<ion-row>
+						<ion-col size="12" class="ion-align-self-center">
+							<ion-button [disabled]="formLogin.formulario.get('nroDocumento').invalid"
+								(click)="irFormulario()" class="ion-no-margin">
+								Ingresar
+								<ion-icon slot="end" name="arrow-forward"></ion-icon>
+							</ion-button>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
+			</form>
+
+			<form [formGroup]="formLogin.formulario" (ngSubmit)="login()" *ngIf="!ingresoDocumento"
+				[class]="'animate__animated animate__faster ' + claseUsuario">
+				<ion-item class="ion-margin-top" lines="full">
+					<ion-icon class="ion-margin-end" name="business-outline"></ion-icon>
+					<ionic-selectable *ngIf="conjuntos.length > 1" #selectConjuntos placeholder="Conjuntos"
+						itemValueField="Nit" formControlName="conjunto" itemTextField="Conjunto" [items]="conjuntos"
+						searchPlaceholder="Buscar" [canSearch]="true" (onChange)="cambioConjunto($event)">
+						<ng-template ionicSelectableHeaderTemplate>
+							<ion-toolbar mode="md">
+								<ion-buttons slot="end">
+									<ion-button (click)="selectConjuntos.close()">
+										<ion-icon color="dark" slot="icon-only" name="close-outline"></ion-icon>
+									</ion-button>
+								</ion-buttons>
+								<ion-title>Conjuntos</ion-title>
+							</ion-toolbar>
+						</ng-template>
+						<ng-template ionicSelectableSearchFailTemplate>
+							<div class="ion-padding ion-text-center">
+								No hay resultados.
+							</div>
+						</ng-template>
+						<ng-template ionicSelectableIconTemplate>
+							<ion-icon name="caret-down-outline"></ion-icon>
+						</ng-template>
+					</ionic-selectable>
+					<ion-input *ngIf="conjuntos.length == 1" readonly>{{ this.conjuntos[0].Conjunto }}</ion-input>
+				</ion-item>
+				<ion-text class="animate__animated animate__bounceIn animate__faster validadores"
+					*ngIf="formLogin.formulario.get('conjunto').touched">
+					{{formLogin.formulario.get('conjunto')['errorMessage'] }}
+				</ion-text>
+				<ion-item class="ion-margin-top" lines="none">
+					<ion-icon class="ion-margin-end" slot="start" name="person-outline"></ion-icon>
+					<ion-input formControlName="nombreUsuario" readonly [value]="this.conjuntos[0].Nombre"
+						placeholder="Usuario..."></ion-input>
+				</ion-item>
+				<ion-item class="ion-margin-top" lines="none">
+					<ion-icon class="ion-margin-end" slot="start" name="lock-closed-outline"></ion-icon>
+					<ion-input formControlName="password" [type]="verPassword ? 'text' : 'password'"
+						placeholder="Contraseña"></ion-input>
+					<ion-icon (click)="verPassword = !verPassword" slot="end" [name]="verPassword ? 'eye' : 'eye-off'">
+					</ion-icon>
+				</ion-item>
+				<ion-text class="animate__animated animate__bounceIn animate__faster validadores"
+					*ngIf="formLogin.formulario.get('password').touched">
+					{{formLogin.formulario.get('password')['errorMessage'] }}
+				</ion-text>
+				<ion-grid class="ion-no-margin">
+					<ion-row>
+						<ion-col size="6" size-xs='12' size-lg='6' size-md='6'
+							class="ion-align-self-center ion-text-center">
+							<ion-button
+								[disabled]="formLogin.formulario.get('conjunto').invalid || formLogin.formulario.get('password').invalid"
+								type="submit" class="ion-no-margin">
+								Iniciar sesión
+								<ion-icon slot="start" name="log-in-outline"></ion-icon>
+							</ion-button>
+						</ion-col>
+						<ion-col size="6" size-xs='12' size-lg='6' size-md='6'
+							class="ion-align-self-center ion-text-center">
+							<ion-button class="ion-no-margin" (click)="retornar()" color="tertiary">
+								Regresar
+								<ion-icon slot="start" name="arrow-back"></ion-icon>
+							</ion-button>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
+			</form>
+		</div>
+	</div>
+</ion-content>

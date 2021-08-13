@@ -1,0 +1,78 @@
+<app-header titulo="Programar Invitaciones"></app-header>
+
+<ion-progress-bar *ngIf="searching" type="indeterminate"></ion-progress-bar>
+
+<ion-segment value="pendientes" (ionChange)="cambioSegmento($event)" [(ngModel)]="segmento">
+	<ion-segment-button value="pendientes">
+		<ion-label>Pendientes</ion-label>
+	</ion-segment-button>
+	<ion-segment-button value="historico">
+		<ion-label>Ingreso historico</ion-label>
+	</ion-segment-button>
+</ion-segment>
+
+<ion-searchbar *ngIf="segmento=='pendientes'" (ionChange)="buscarFiltro('buscarLista', $event)" clearIcon="close-sharp" placeholder="Buscar invitación" [debounce]="250"></ion-searchbar>
+<ion-searchbar *ngIf="segmento=='historico'" (ionChange)="buscarFiltro('buscarListaHistorico', $event)" clearIcon="close-sharp" placeholder="Buscar historico" [debounce]="250"></ion-searchbar>
+
+<ion-content [ngSwitch]="segmento" color="gray">
+	<ion-refresher *ngSwitchCase="'pendientes'" slot="fixed" (ionRefresh)="obtenerInformacion('obtenerInvitaciones', 'invitaciones', {},  $event)">
+		<ion-refresher-content></ion-refresher-content>
+	</ion-refresher>
+	<div *ngSwitchCase="'pendientes'">
+		<ion-list lines="full" class="ion-no-padding">
+			<ion-item-sliding (click)="sliding('slidingProgramar' + i)" *ngFor="let item of invitados | filtro: 'Nombre': buscarLista; let i = index;" [id]="'slidingProgramar' + i">
+				<ion-item>
+					<ion-label>
+						<h1>{{ item['Nombre'] }}</h1>
+						<p>{{ item['Cedula'] }}</p>
+					</ion-label>
+					<ion-text class="ion-text-center" color="primary">
+						<p>{{ item['Fecha'] }}</p>
+						<ion-badge color="warning">
+							{{ item['Estado'] }}
+						</ion-badge>
+					</ion-text>
+				</ion-item>
+				<ion-item-options side="end">
+					<ion-item-option slot="end" color="danger" (click)="accionProgramar('eliminar', item)">
+						<ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+					</ion-item-option>
+					<ion-item-option slot="end" color="success" (click)="accionProgramar('visualizar', item)">
+						<ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+					</ion-item-option>
+				</ion-item-options>
+			</ion-item-sliding>
+		</ion-list>
+		<div class="ion-padding ion-text-center nohayresultado" *ngIf="!invitados.length && !searching">
+			No tiene invitados programados.
+		</div>
+	</div>
+	<ion-refresher *ngSwitchCase="'historico'" slot="fixed" (ionRefresh)="obtenerInformacion('obtenerHistoricos', 'infoHistorico', {},  $event)">
+		<ion-refresher-content></ion-refresher-content>
+	</ion-refresher>
+	<div *ngSwitchCase="'historico'">
+		<ion-list lines="full" class="ion-no-padding">
+			<ion-item [detail]="true" *ngFor="let item of historico | filtro: 'Nombre': buscarListaHistorico;" (click)="verHistorico(item['ProgIngresoId'])">
+				<ion-label>
+					<h1>{{ item['Nombre'] }}</h1>
+					<p>{{ item['Cedula'] }}</p>
+				</ion-label>
+				<ion-text class="ion-text-center" color="primary">
+					<p>{{ item['Fecha'] }}</p>
+					<ion-badge color="warning">
+						{{ item['Estado'] }}
+					</ion-badge>
+				</ion-text>
+			</ion-item>
+		</ion-list>
+		<div class="ion-padding ion-text-center nohayresultado" *ngIf="!historico.length && !searching">
+			No tiene personas en el historico.
+		</div>
+	</div>
+
+	<ion-fab horizontal="end" vertical="bottom" slot="fixed" *ngIf="segmento == 'pendientes'">
+		<ion-fab-button [disabled]="searching" (click)="formProgramar()">
+			<ion-icon name="add"></ion-icon>
+		</ion-fab-button>
+	</ion-fab>
+</ion-content>

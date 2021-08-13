@@ -1,0 +1,60 @@
+<app-header titulo="Incidencias"></app-header>
+
+<ion-progress-bar *ngIf="searching" type="indeterminate"></ion-progress-bar>
+
+<ion-searchbar id="searchFiltro" (ionChange)="buscarFiltro($event)" clearIcon="close-sharp" placeholder="Buscar Incidencia" [debounce]="1200"></ion-searchbar>
+
+<ion-content color="gray">
+	<ion-refresher slot="fixed" (ionRefresh)="refreshIncidencias($event)">
+		<ion-refresher-content></ion-refresher-content>
+	</ion-refresher>
+	<ion-list lines="full" class="ion-no-padding">
+		<ion-item-sliding (click)="slidingGeneral('slidingInc' + i)" *ngFor="let item of listaIncidencias; let i = index;" [id]="'slidingInc' + i">
+			<ion-item>
+				<ion-label>
+					<h2><b>{{ item['Numero']}}</b> - {{ item['Asunto'] }}</h2>
+					<p>{{ item['Descripcion'] }}</p>
+				</ion-label>
+				<ion-label class="ion-text-end">
+					<P>{{ item['EstadoIncidencia']}}</P>
+					<P>{{ item['TipoIncidencia']}}</P>
+					<p>{{ item['Fecha'] }}</p>
+				</ion-label>
+			</ion-item>
+			<ion-item-options side="end">
+				<ion-item-option slot="end" color="tertiary" (click)="detalleIncidencia(item)">
+					<ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+				</ion-item-option>
+			</ion-item-options>
+		</ion-item-sliding>
+	</ion-list>
+	<div class="ion-padding ion-text-center nohayresultado" *ngIf="!listaIncidencias.length && !searching">
+		No tiene incidencias programadas.
+	</div>
+
+	<ion-infinite-scroll class="ion-padding ion-padding-vertical" threshold="150px" (ionInfinite)="loadData($event)">
+		<ion-infinite-scroll-content loadingSpinner="lines" loadingText="Obteniendo información...">
+		</ion-infinite-scroll-content>
+	</ion-infinite-scroll>
+
+	<!-- <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+		<ion-fab-button [disabled]="searching" (click)="formProgramar()">
+			<ion-icon name="add"></ion-icon>
+		</ion-fab-button>
+	</ion-fab> -->
+
+	<ion-fab horizontal="end" vertical="bottom" slot="fixed">
+		<ion-fab-button [disabled]="searching" color="secondary">
+			<ion-icon md="caret-back" ios="chevron-back-circle-outline"></ion-icon>
+		</ion-fab-button>
+		<ion-fab-list side="start">
+			<ion-fab-button color="primary" (click)="formProgramar()">
+				<ion-icon name="add"></ion-icon>
+			</ion-fab-button>
+			<ion-fab-button color="dark" (click)="filtros()">
+				<ion-icon name="funnel"></ion-icon>
+			</ion-fab-button>
+		</ion-fab-list>
+	</ion-fab>
+
+</ion-content>

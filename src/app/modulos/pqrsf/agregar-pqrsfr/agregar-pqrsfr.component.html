@@ -1,0 +1,82 @@
+<ion-header class="ion-no-border header-modal">
+	<ion-toolbar color="ligth" mode='ios'>
+		<ion-title color="dark">
+			{{ accion | titlecase }} PQRSF
+		</ion-title>
+		<ion-buttons slot="end">
+			<ion-icon color="dark" slot='icon-only' size='large' name='close-outline' (click)="cerrarModal()"></ion-icon>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+
+<ion-progress-bar *ngIf="searching" type="indeterminate"></ion-progress-bar>
+
+<ion-content class="ion-padding">
+	<form [formGroup]="datosFormulario.formulario" (ngSubmit)="guardarPQR()">
+		<ion-list lines="full">
+			<div *ngFor="let item of datosFormulario.propiedades;">
+				<ion-item [ngSwitch]="item">
+					<ion-label color="dark" *ngSwitchCase="'TipoPQR'">
+						Tipo PQRSF
+					</ion-label>
+					<ionic-selectable *ngSwitchCase="'TipoPQR'" [formControlName]="item" #selectTipoPQR placeholder="Seleccion una tipo" itemValueField="TipoPQRId" itemTextField="Nombre" [items]="tipoPQR" searchPlaceholder="Buscar" [canSearch]="true">
+						<ng-template ionicSelectableHeaderTemplate>
+							<ion-toolbar>
+								<ion-title slot="start" class="ion-text-left ion-no-padding ion-padding-horizontal">Tipo PQRSF</ion-title>
+								<ion-buttons slot="end">
+									<ion-button (click)="selectTipoPQR.close()">
+										<ion-icon color="dark" slot="icon-only" name="close-outline"></ion-icon>
+									</ion-button>
+								</ion-buttons>
+							</ion-toolbar>
+						</ng-template>
+						<ng-template ionicSelectableSearchFailTemplate>
+							<div class="ion-padding ion-text-center">
+								No hay resultados.
+							</div>
+						</ng-template>
+						<ng-template ionicSelectableIconTemplate>
+							<ion-icon name="caret-down-outline"></ion-icon>
+						</ng-template>
+					</ionic-selectable>
+					<ion-grid *ngSwitchCase="'Descripcion'" class="ion-no-padding ion-padding-vertical">
+						<ion-row>
+							<ion-col size="12">
+								<ion-label color="dark">Descripción</ion-label>
+							</ion-col>
+							<ion-col size="12">
+								<ion-textarea rows="3" class="ion-no-padding" [formControlName]="item" color="dark"></ion-textarea>
+							</ion-col>
+						</ion-row>
+					</ion-grid>
+					<ion-grid *ngSwitchCase="'Archivos'" class="ion-no-padding ion-padding-vertical">
+						<ion-row>
+							<ion-col size="12">
+								<ion-label color="dark">Anexar Archivos:</ion-label>
+							</ion-col>
+							<ion-col size="12">
+								<div class="custom-file">
+									<input type="file" class="custom-file-input" accept="application/msword, application/vnd.ms-excel, text/plain, application/pdf, image/*, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" id="customFile" (change)="onFileChange($event)">
+									<label class="custom-file-label" for="customFile" data-browse="Elegir">{{nombreInputFile}}</label>
+								</div>
+							</ion-col>
+						</ion-row>
+					</ion-grid>
+					<ion-label color="dark" *ngSwitchDefault>
+						{{ item | camelCase | titlecase }}
+					</ion-label>
+					<ion-input [formControlName]="item" *ngSwitchDefault color="dark" class="ion-text-end" type="text">	</ion-input>
+				</ion-item>
+				<div class="ion-text-end">
+					<ion-text class="animate__animated animate__bounceIn animate__faster" *ngIf="datosFormulario.formulario.get(item).touched" color="danger">{{ datosFormulario.formulario.get(item)['errorMessage'] }}</ion-text>
+				</div>
+			</div>
+		</ion-list>
+	</form>
+
+	<ion-fab horizontal="end" vertical="bottom" slot="fixed" *ngIf="accion != 'visualizar'">
+		<ion-fab-button [disabled]="searching" (click)="guardarPQR()">
+			<ion-icon name="save"></ion-icon>
+		</ion-fab-button>
+	</ion-fab>
+</ion-content>

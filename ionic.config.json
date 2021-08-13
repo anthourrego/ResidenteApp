@@ -1,0 +1,8 @@
+{
+  "name": "ResidenteApp",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}

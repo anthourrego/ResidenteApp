@@ -1,0 +1,48 @@
+<app-header titulo="Mis vehiculos"></app-header>
+
+<ion-progress-bar *ngIf="searching" type="indeterminate"></ion-progress-bar>
+
+<ion-searchbar (ionChange)="buscarFiltro($event)" clearIcon="close-sharp" placeholder="Buscar Vehiculo" [debounce]="250"></ion-searchbar>
+
+<ion-content color="gray">
+	<ion-refresher slot="fixed" (ionRefresh)="obtenerVehiculos($event)">
+		<ion-refresher-content></ion-refresher-content>
+	</ion-refresher>
+	<ion-list lines="full" class="ion-no-padding">
+		<ion-item-sliding (click)="slidingVehiculo('slidingInvitados' + i)" *ngFor="let item of vehiculos | filtro: 'Nombre': buscarLista; let i = index;"
+			[id]="'slidingInvitados' + i">
+			<ion-item>
+				<ion-label>
+					<h1>{{ item['Nombre'] }}</h1>
+					<p>{{ item['Marca'] }}</p>
+				</ion-label>
+				<ion-text class="ion-text-center" color="primary">
+					<p>{{ item['Placa'] }}</p>
+				</ion-text>
+			</ion-item>
+			<ion-item-options side="end">
+				<ion-item-option slot="end" color="danger"
+					(click)="accionVehiculo('eliminar', item['TerceroVehiculoId'], item['Placa'])">
+					<ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+				</ion-item-option>
+				<!-- <ion-item-option slot="end" color="success" (click)="accionVehiculo('modificar', item['TerceroVehiculoId'])">
+					<ion-icon slot="icon-only" name="create-outline"></ion-icon>
+				</ion-item-option> -->
+				<ion-item-option slot="end" color="success"
+					(click)="accionVehiculo('visualizar', item['TerceroVehiculoId'])">
+					<ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+				</ion-item-option>
+			</ion-item-options>
+		</ion-item-sliding>
+	</ion-list>
+
+	<div class="ion-padding ion-text-center nohayresultado" *ngIf="!vehiculos.length && !searching">
+		No tiene vehiculos registrados.
+	</div>
+
+	<ion-fab horizontal="end" vertical="bottom" slot="fixed">
+		<ion-fab-button [disabled]="searching" (click)="formularioVehiculo()">
+			<ion-icon name="add"></ion-icon>
+		</ion-fab-button>
+	</ion-fab>
+</ion-content>

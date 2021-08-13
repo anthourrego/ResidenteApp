@@ -1,0 +1,99 @@
+<ion-header class="ion-no-border header-modal">
+	<ion-toolbar color="ligth" mode='ios'>
+		<ion-title color="dark">
+			{{ accion | titlecase }} Mascota
+		</ion-title>
+		<ion-buttons slot="end">
+			<ion-icon color="dark" slot='icon-only' size='large' name='close-outline' (click)="cerrarModal()"></ion-icon>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+
+<ion-progress-bar *ngIf="searching" type="indeterminate"></ion-progress-bar>
+
+<ion-content class="ion-padding">
+
+	<div class="foto-perfil">
+		<ion-avatar>
+			<img [src]="fotoMascota ? (imagenGuardar ? extBase64 : '') + fotoMascota : 'assets/img/nofoto.png'" />
+		</ion-avatar>
+		<ion-button (click)="obtenerFoto()">
+			<ion-icon slot="icon-only" name="camera"></ion-icon>
+		</ion-button>
+	</div>
+
+	<form [formGroup]="datosFormulario.formulario" (ngSubmit)="guardarMascota()">
+		<ion-list lines="full">
+			<div *ngFor="let item of datosFormulario.propiedades;">
+				<ion-item [ngSwitch]="item">
+					
+					<ion-label color="dark" *ngSwitchCase="'FechaNac'">Fecha Nacimiento</ion-label>
+					<ion-label color="dark" *ngSwitchCase="'Tamano'">Tamaño</ion-label>
+					<ion-label color="dark" *ngSwitchCase="'TipoMascotaId'">Tipo Mascota</ion-label>
+					<ion-label color="dark" *ngSwitchCase="'Sexo'">Sexo</ion-label>
+					
+					<ion-label color="dark" *ngSwitchDefault>
+						{{ item | camelCase | titlecase }}
+					</ion-label>
+
+					<ion-select [formControlName]="item" *ngSwitchCase="'TipoMascotaId'" okText="Aceptar"
+						cancelText="Cancelar" [interfaceOptions]="{cssClass: 'modal-color'}"
+						placeholder="Selecciona el tipo de mascota">
+						<ion-select-option color="dark" *ngFor="let item of tipoMascotas;" [value]="item['id']">
+							{{item['nombre'] }}
+						</ion-select-option>
+					</ion-select>
+					<ion-select [formControlName]="item" *ngSwitchCase="'Sexo'" okText="Aceptar"
+						cancelText="Cancelar" [interfaceOptions]="{cssClass: 'modal-color'}"
+						placeholder="Selecciona el sexo">
+						<ion-select-option color="dark" value="M">Macho</ion-select-option>
+						<ion-select-option color="dark" value="F">Hembra</ion-select-option>
+					</ion-select>
+
+					<ion-datetime *ngSwitchCase="'FechaNac'" [formControlName]="item" [pickerOptions]="{'cssClass': 'color-picker'}" cancelText="Cancelar" doneText="Aceptar" display-format="DD-MM-YYYY" [max]="maximoFecha"></ion-datetime>
+
+					<ion-grid *ngSwitchCase="'Observacion'" class="ion-no-padding ion-padding-vertical">
+						<ion-row>
+							<ion-col size="12">
+								<ion-label color="dark">Observaciones</ion-label>
+							</ion-col>
+							<ion-col size="12">
+								<ion-textarea rows="3" class="ion-no-padding" [formControlName]="item" color="dark"></ion-textarea>
+							</ion-col>
+						</ion-row>
+					</ion-grid>
+
+					<ion-input [formControlName]="item" placeholder="Ej: 1.25" (ionChange)="formataNumero(item, $event)" *ngSwitchCase="'Tamano'" type="number" color="dark" class="ion-text-end" type="text"></ion-input>
+					<ion-input [formControlName]="item" *ngSwitchDefault color="dark" class="ion-text-end" type="text">	</ion-input>
+				</ion-item>
+				<div class="ion-text-end">
+					<ion-text class="animate__animated animate__bounceIn animate__faster" *ngIf="datosFormulario.formulario.get(item).touched" color="danger">{{ datosFormulario.formulario.get(item)['errorMessage'] }}</ion-text>
+				</div>
+			</div>
+			<div *ngIf="datos">
+				<ion-item>
+					<ion-grid class="ion-no-padding ion-padding-vertical">
+						<ion-row>
+							<ion-col size="12">
+								<ion-label color="dark">Vacunas</ion-label>
+							</ion-col>
+							<ion-col size="12">
+								<ion-text [innerHTML]="datos['Vacuna']" color="dark"></ion-text>
+							</ion-col>
+						</ion-row>
+					</ion-grid>
+				</ion-item>
+			</div>
+		</ion-list>
+		<!-- <ion-button class="ion-margin-top" [disabled]="searching" mode="md" *ngIf="accion != 'visualizar'" expand="full" type="submit"
+			shape="round">
+			<ion-icon slot="start" name="save"></ion-icon>
+			{{ accion | titlecase }}
+		</ion-button> -->
+	</form>
+	<ion-fab horizontal="end" vertical="bottom" slot="fixed">
+		<ion-fab-button [disabled]="searching" (click)="guardarMascota()" type="submit">
+			<ion-icon name="save"></ion-icon>
+		</ion-fab-button>
+	</ion-fab>
+</ion-content>

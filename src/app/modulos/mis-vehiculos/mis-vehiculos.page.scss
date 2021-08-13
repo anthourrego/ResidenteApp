@@ -1,0 +1,14 @@
+ion-content {
+    ion-list {
+        ion-item-sliding {
+            width: unset;
+            ion-item {
+                ion-label {
+                    p {
+                        color: var(--ion-color-medium);
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,47 @@
+<app-header [titulo]="'Visitantes'"></app-header>
+
+<ion-progress-bar *ngIf="searching" type="indeterminate"></ion-progress-bar>
+
+<ion-searchbar (ionChange)="buscarFiltro('buscarLista', $event)" clearIcon="close-sharp" placeholder="Buscar invitación" [debounce]="250"></ion-searchbar>
+
+<ion-content color="gray">
+	<ion-refresher slot="fixed" *ngIf="viviendaTercero > -1" (ionRefresh)="obtenerVisitantes($event)">
+		<ion-refresher-content></ion-refresher-content>
+	</ion-refresher>
+	<ion-list lines="full" class="ion-no-padding">
+		<ion-item-sliding (click)="slidingVisitante('slidingVisitantes' + i)" *ngFor="let item of visitantes | filtro: 'Nombre': buscarLista; let i = index;" [id]="'slidingVisitantes' + i">
+			<ion-item>
+				<ion-avatar slot="start">
+					<img [src]="item['Foto'] ? item['Foto'] : 'assets/img/foto-perfil.png'" />
+				</ion-avatar>
+				<ion-label>
+					<h2>{{ item['Nombre'] }}</h2>
+					<p>{{ item['Observacion'] }}</p>
+				</ion-label>
+				<ion-text class="ion-text-center" color="primary">
+					<p>{{ item['Fecha'] }}</p>
+				</ion-text>
+			</ion-item>
+			<ion-item-options side="end">
+				<ion-item-option slot="end" color="danger"
+					(click)="accionVisitante('eliminar', item['ProgIngresoId'], item['Nombre'])">
+					<ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+				</ion-item-option>
+				<ion-item-option slot="end" color="primary"
+					(click)="accionVisitante('modificar', item['ProgIngresoId'])">
+					<ion-icon slot="icon-only" name="create-outline"></ion-icon>
+				</ion-item-option>
+			</ion-item-options>
+		</ion-item-sliding>
+	</ion-list>
+
+	<div class="ion-padding ion-text-center nohayresultado" *ngIf="!visitantes.length && !searching">
+		No tiene visitantes registrados.
+	</div>
+
+	<ion-fab horizontal="end" vertical="bottom" slot="fixed">
+		<ion-fab-button [disabled]="searching" (click)="formularioVisitante()">
+			<ion-icon name="add"></ion-icon>
+		</ion-fab-button>
+	</ion-fab>
+</ion-content>

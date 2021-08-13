@@ -1,0 +1,119 @@
+<app-header titulo="Mis mascotas"></app-header>
+
+<ion-progress-bar *ngIf="searching" type="indeterminate"></ion-progress-bar>
+
+<ion-segment value="mascotas" (ionChange)="cambioSegmento($event)" [(ngModel)]="segmento">
+	<ion-segment-button value="mascotas">
+		  <ion-label>Mascotas</ion-label>
+	</ion-segment-button>
+	<ion-segment-button [disabled]="!mascotas.length" value="vacunas">
+		  <ion-label>Vacunas</ion-label>
+	</ion-segment-button>
+</ion-segment>
+
+<ion-searchbar *ngIf="segmento=='mascotas'" (ionChange)="buscarFiltro($event)" clearIcon="close-sharp" placeholder="Buscar Mascota" [debounce]="250"></ion-searchbar>
+
+<ion-content [ngSwitch]="segmento" color="gray">
+	<ion-refresher *ngSwitchCase="'mascotas'" slot="fixed" (ionRefresh)="listaMascotas($event)">
+		<ion-refresher-content></ion-refresher-content>
+	</ion-refresher>
+	<div *ngSwitchCase="'mascotas'">
+		<ion-list lines="full" class="ion-no-padding">
+			<ion-item-sliding (click)="slidingGeneral('slidingMascotas' + i)" *ngFor="let item of mascotas | filtro: 'nombre': buscarLista; let i = index;" [id]="'slidingMascotas' + i">
+				<ion-item>
+					<ion-thumbnail slot="start">
+						<ion-img src="{{item['Foto'] == '' ? 'assets/img/nofoto.png' : rutaFoto + item['Foto'].substr(2) }}"></ion-img>
+					</ion-thumbnail>
+					<ion-label>
+						<h1>{{ item['nombre'] }}</h1>
+						<p>{{ item['TipoMascota'] }}</p>
+					</ion-label>
+					<ion-text class="ion-text-center" color="primary">
+						<p>{{ item['Sexo'] }}</p>
+						<p>{{ item['Raza'] }}</p>
+					</ion-text>
+				</ion-item>
+				<ion-item-options side="end">
+					<ion-item-option slot="end" color="danger" (click)="accionMascota('eliminar', item)">
+						<ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+					</ion-item-option>
+					<ion-item-option slot="end" color="tertiary" (click)="accionMascota('vacuna', item)">
+						<ion-icon slot="icon-only" name="eyedrop-outline"></ion-icon>
+					</ion-item-option>
+					<ion-item-option slot="end" color="success" (click)="accionMascota('editar', item)">
+						<ion-icon slot="icon-only" name="create-outline"></ion-icon>
+					</ion-item-option>
+				</ion-item-options>
+			</ion-item-sliding>
+		</ion-list>
+		<div class="ion-padding ion-text-center nohayresultado" *ngIf="!mascotas.length && !searching">
+			No tiene mascotas registradas.
+		</div>
+	</div>
+
+	<ion-refresher *ngIf="segmento == 'vacunas' && !btnAgregarVacuna" slot="fixed" (ionRefresh)="refreshVacunas($event)">
+		<ion-refresher-content></ion-refresher-content>
+	</ion-refresher>
+	<div *ngSwitchCase="'vacunas'">
+		<ion-item lines="full" [formGroup]="formSelectMascota">
+			<ionic-selectable formControlName="selectMascota" #selectConjuntos placeholder="Seleccion una mascota" itemValueField="id" itemTextField="nombre" [items]="mascotas" searchPlaceholder="Buscar" [canSearch]="true" (onChange)="cambioMascota($event)">
+				<ng-template ionicSelectableHeaderTemplate>
+					<ion-toolbar>
+						<ion-title slot="start" class="ion-text-left ion-no-padding ion-padding-horizontal">Mascotas</ion-title>
+						<ion-buttons slot="end">
+							<ion-button (click)="selectConjuntos.close()">
+								<ion-icon color="dark" slot="icon-only" name="close-outline"></ion-icon>
+							</ion-button>
+						</ion-buttons>
+					</ion-toolbar>
+				</ng-template>
+				<ng-template ionicSelectableSearchFailTemplate>
+					<div class="ion-padding ion-text-center">
+						No hay resultados.
+					</div>
+				</ng-template>
+				<ng-template ionicSelectableIconTemplate>
+					<ion-icon name="caret-down-outline"></ion-icon>
+				</ng-template>
+			</ionic-selectable>
+		</ion-item>
+		<ion-list lines="full" class="ion-no-padding">
+			<ion-item-sliding (click)="slidingGeneral('slidingVacunas' + i)" *ngFor="let item of vacunas; let i = index;" [id]="'slidingVacunas' + i">
+				<ion-item>
+					<ion-label>
+						<h1>{{ item['Vacuna'] }}</h1>
+						<p>{{ item['Fecha'] }}</p>
+					</ion-label>
+				</ion-item>
+				<ion-item-options side="end">
+					<ion-item-option slot="end" color="danger"
+						(click)="accionVacuna('eliminar', item)">
+						<ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+					</ion-item-option>
+				</ion-item-options>
+			</ion-item-sliding>
+		</ion-list>
+		<div class="ion-padding ion-text-center nohayresultado" *ngIf="!btnAgregarVacuna && !vacunas.length && !searching">
+			No tiene vacunas registradas.
+		</div>
+	</div>
+	<ion-fab [ngSwitch]="segmento" horizontal="end" vertical="bottom" slot="fixed">
+		<ion-fab-button *ngSwitchCase="'mascotas'" [disabled]="btnAgregarMascota" (click)="formularioMascota()">
+			<ion-icon name="add"></ion-icon>
+		</ion-fab-button>
+		<ion-fab-button *ngSwitchCase="'vacunas'" [disabled]="btnAgregarVacuna" (click)="formularioVacuna()">
+			<ion-icon name="add"></ion-icon>
+		</ion-fab-button>
+	</ion-fab>
+</ion-content>
+
+<!-- <ion-footer [ngSwitch]="segmento" class="ion-padding-horizontal">
+	<ion-button *ngSwitchCase="'mascotas'" [disabled]="btnAgregarMascota" (click)="formularioMascota()" mode="md" expand="block">
+		<ion-icon slot="start" name="add"></ion-icon>
+		Agregar mascota
+	</ion-button>
+	<ion-button *ngSwitchCase="'vacunas'" [disabled]="btnAgregarVacuna" (click)="formularioVacuna()" mode="md" expand="block">
+		<ion-icon slot="start" name="add"></ion-icon>
+		Agregar vacuna
+	</ion-button>
+</ion-footer> -->

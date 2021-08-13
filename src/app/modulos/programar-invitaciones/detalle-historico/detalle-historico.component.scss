@@ -1,0 +1,28 @@
+ion-card {
+    border-radius: 5px !important;
+    ion-card-header {
+        ion-card-subtitle {
+            height: 40px;
+            display: flex;
+            ion-text {
+                color: #1eaaf1;
+                h5 {
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+    ion-card-content {
+        ion-list {
+            ion-item {
+                height: 35px !important;
+                border-bottom: 1px rgb(0 0 0 / 25%) dashed !important;
+                --padding-start: 0px;
+                --inner-padding-end: 0px !important;
+                ion-note {
+                    margin-inline: 0px;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,66 @@
+<ion-header class="ion-no-border header-modal">
+	<ion-toolbar color="ligth" mode='ios'>
+		<ion-title color="dark">
+      Filtros PQRSF
+		</ion-title>
+		<ion-buttons slot="end">
+			<ion-icon color="dark" slot='icon-only' size='large' name='close-outline' (click)="cerrarModal()"></ion-icon>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+	<form [formGroup]="formFiltro" (ngSubmit)="filtrar()">
+		<ion-list lines="full">
+			<ion-item>
+				<ion-label color="dark">
+					Desde:
+				</ion-label>
+				<ion-datetime #fechaDesde formControlName="desde" placeholder="Seleccione una fecha" [pickerOptions]="{'cssClass': 'color-picker'}" cancelText="Cancelar" doneText="Aceptar" display-format="DD-MM-YYYY" [max]="maximoFechaDesde" (ionChange)="cambioFechaDesde(fechaDesde.value)"></ion-datetime>
+			</ion-item>
+			<ion-item>
+				<ion-label color="dark">
+					Hasta:
+				</ion-label>
+				<ion-datetime #fechaHasta formControlName="hasta" placeholder="Seleccione una fecha" [pickerOptions]="{'cssClass': 'color-picker'}" cancelText="Cancelar" doneText="Aceptar" display-format="DD-MM-YYYY" [min]="minFechaHasta" [max]="maximoFechaHasta" (ionChange)="cambioFechaHasta(fechaHasta.value)"></ion-datetime>
+			</ion-item>
+			<ion-item>
+				<ion-label color="dark">Tipo PQRSF</ion-label>
+				<ionic-selectable formControlName="tipoReunion" #selectTipoPQR1 placeholder="Seleccion un tipo PQR" itemValueField="TipoPQRId" itemTextField="Nombre" [items]="selectTipoPQR" searchPlaceholder="Buscar" clearButtonText="Limpiar" confirmButtonText="Aceptar" [canClear]="true" [canSearch]="true" [isMultiple]="true">
+					<ng-template ionicSelectableHeaderTemplate>
+						<ion-toolbar>
+							<ion-title slot="start" class="ion-text-left ion-no-padding ion-padding-horizontal">
+								Tipo PQRSF
+							</ion-title>
+							<ion-buttons slot="end">
+								<ion-button (click)="selectTipoPQR1.close()">
+									<ion-icon color="dark" slot="icon-only" name="close-outline"></ion-icon>
+								</ion-button>
+							</ion-buttons>
+						</ion-toolbar>
+					</ng-template>
+					<ng-template ionicSelectableSearchFailTemplate>
+						<div class="ion-padding ion-text-center">
+							No hay resultados.
+						</div>
+					</ng-template>
+					<ng-template ionicSelectableIconTemplate>
+						<ion-icon name="caret-down-outline"></ion-icon>
+					</ng-template>
+				</ionic-selectable>
+			</ion-item>
+		</ion-list>
+		<ion-button class="ion-margin-top" mode="md" expand="full" type="submit" shape="round">
+			<ion-icon slot="start" name="funnel"></ion-icon>
+			Filtrar
+		</ion-button>
+		<ion-button class="ion-margin-top" color="danger" mode="md" (click)="formReset()" expand="full" shape="round">
+			<ion-icon slot="start" name="reload"></ion-icon>
+			Limpiar
+		</ion-button>
+		<ion-button color="secondary" class="ion-margin-top" mode="md" expand="full" (click)="cerrarModal('todo')" shape="round">
+			<ion-icon slot="start" name="menu"></ion-icon>
+			Cargar todo
+		</ion-button>
+	</form>
+</ion-content>

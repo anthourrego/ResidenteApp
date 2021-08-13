@@ -1,0 +1,64 @@
+<ion-header class="ion-no-border header-modal">
+	<ion-toolbar color="ligth" mode='ios'>
+		<ion-title color="dark">
+			{{ accion | titlecase }} Visitante
+		</ion-title>
+		<ion-buttons slot="end">
+			<ion-icon color="dark" slot='icon-only' size='large' name='close-outline' (click)="cerrarModal()">
+			</ion-icon>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+	<div class="foto-perfil">
+		<ion-avatar>
+			<img
+				[src]="fotoVisitante ? (imagenGuardar ? extBase64 : '') + fotoVisitante : 'assets/img/nofoto.png'" />
+		</ion-avatar>
+		<ion-button (click)="obtenerFotoPerfil()">
+			<ion-icon slot="icon-only" name="camera"></ion-icon>
+		</ion-button>
+	</div>
+
+	<form [formGroup]="datosFormulario.formulario" (ngSubmit)="guardarVisitante()">
+		<ion-list lines="full">
+			<div *ngFor="let item of datosFormulario.propiedades;">
+				<ion-item [ngSwitch]="item">
+					<ion-label color="dark">{{ (item == 'TipoVehiculoId' ? 'tipoVehiculo' : item) | camelCase |
+						titlecase }}
+					</ion-label>
+					<ion-select [formControlName]="item" *ngSwitchCase="'TipoVehiculoId'" okText="Aceptar"
+						cancelText="Cancelar" [interfaceOptions]="{cssClass: 'modal-color'}"
+						placeholder="Selecciona el tipo de vehiculo">
+						<ion-select-option color="dark" *ngFor="let item of tipoVehiculos;" [value]="item['id']">{{
+							item['nombre'] }}
+						</ion-select-option>
+					</ion-select>
+					<ion-input [formControlName]="item" *ngSwitchDefault color="dark" class="ion-text-end" type="text">
+					</ion-input>
+				</ion-item>
+				<div class="ion-text-end">
+					<ion-text class="animate__animated animate__bounceIn animate__faster"
+						*ngIf="datosFormulario.formulario.get(item).touched" color="danger">{{
+						datosFormulario.formulario.get(item)['errorMessage'] }}</ion-text>
+				</div>
+			</div>
+		</ion-list>
+		<!-- <ion-button class="ion-margin-top" mode="md" *ngIf="accion != 'visualizar'" expand="full" type="submit"
+			shape="round">
+			<ion-icon slot="start" name="save"></ion-icon>
+			{{ accion | titlecase }}
+		</ion-button> -->
+		<!-- <ion-button class="ion-margin-top" mode="md" expand="full" type="button" (click)="cerrarModal()" shape="round"
+			*ngIf="accion == 'visualizar'">
+			Regresar
+		</ion-button> -->
+	</form>
+	<ion-fab horizontal="end" vertical="bottom" slot="fixed">
+		<ion-fab-button (click)="guardarVisitante()" *ngIf="accion != 'visualizar'">
+			<ion-icon name="save"></ion-icon>
+		</ion-fab-button>
+	</ion-fab>
+</ion-content>

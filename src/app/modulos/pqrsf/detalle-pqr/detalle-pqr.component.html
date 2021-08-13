@@ -1,0 +1,130 @@
+<ion-header class="ion-no-border header-modal">
+	<ion-toolbar color="ligth" mode='ios'>
+		<ion-title color="dark">
+      		Ver PQRSF {{ datos['Pqr'] }} 
+		</ion-title>
+		<ion-buttons slot="end">
+			<ion-icon color="dark" slot='icon-only' size='large' name='close-outline' (click)="cerrarModal()"></ion-icon>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+
+<ion-progress-bar *ngIf="searching" type="indeterminate"></ion-progress-bar>
+
+<ion-segment value="informacion" (ionChange)="cambioSegmento($event)" [(ngModel)]="segmento">
+	<ion-segment-button value="informacion">
+		<ion-label>Información</ion-label>
+	</ion-segment-button>
+	<ion-segment-button value="notas">
+		<ion-label>Notas</ion-label>
+	</ion-segment-button>
+	<ion-segment-button value="historial">
+		<ion-label>Historial</ion-label>
+	</ion-segment-button>
+</ion-segment>
+
+<ion-content [ngSwitch]="segmento" color="gray">
+	<div *ngSwitchCase="'informacion'">
+		<ion-list lines="full" class="ion-no-padding">
+			<ion-item>
+				<ion-label color="dark"><b>Tipo</b></ion-label>
+				<ion-text color="dark" class="ion-text-end">{{datos['Clasificacion']}}</ion-text>
+			</ion-item>
+			<ion-item>
+				<ion-label color="dark"><b>Estado</b></ion-label>
+				<ion-text color="dark" class="ion-text-end">{{datos['Estado']}}</ion-text>
+			</ion-item>
+			<ion-item>
+				<ion-label color="dark"><b>Fecha creación</b></ion-label>
+				<ion-text color="dark" class="ion-text-end">{{datos['Fecha']}}</ion-text>
+			</ion-item>
+			<ion-item>
+				<ion-label color="dark"><b>Fecha cierre</b></ion-label>
+				<ion-text color="dark" class="ion-text-end">{{datos['FechaCierre']}}</ion-text>
+			</ion-item>
+			<ion-item>
+				<ion-grid class="ion-no-padding ion-padding-vertical">
+					<ion-row>
+						<ion-col size="12">
+							<ion-label color="dark"><b>Asunto</b></ion-label>
+						</ion-col>
+						<ion-col size="12">
+							<ion-text color="dark" class="ion-text-end">{{datos['Asunto']}}</ion-text>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
+			</ion-item>
+			<ion-item>
+				<ion-grid class="ion-no-padding ion-padding-vertical">
+					<ion-row>
+						<ion-col size="12">
+							<ion-label color="dark"><b>Descripción</b></ion-label>
+						</ion-col>
+						<ion-col size="12">
+							<ion-text color="dark">{{datos['Descripcion']}}</ion-text>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
+			</ion-item>
+		</ion-list>
+	</div>
+	<div *ngSwitchCase="'notas'">
+		<ion-list lines="full" class="ion-no-padding">
+			<ion-item class="ion-no-padding"  *ngFor="let item of listaNotas; let i = index;">
+				<ion-grid class="ion-no-padding ion-padding-vertical ion-padding-start">
+					<ion-col size="12" (click)="collapse(i)">
+						<ion-label color="dark"><ion-icon name="person-circle-outline"></ion-icon> {{item['nombre']}}</ion-label>
+						<ion-text color="dark" class="ion-text-end"><ion-icon name="time-outline"></ion-icon> {{item['FechaRegis']}}</ion-text>
+					</ion-col>
+					<ion-col *ngIf="item['collapse']" size="12">
+						<div class="notaDetalle animate__animated animate__fadeInDown animate__faster">
+							<p class="ion-no-margin ion-margin-top">
+								{{item['DetalleP']}}
+							</p>
+							<div *ngIf="item['Adjuntos']" class="ion-margin-top">
+								<ion-button color="primary" *ngFor="let item1 of item['Adjuntos'];" (click)="abrirArchivo(item1)">
+									{{item1.Archivo}}
+								</ion-button>
+							</div>
+						</div>
+					</ion-col>
+				</ion-grid>
+				<ion-icon style="height: 100%" [name]="item['collapse'] ? 'caret-up-outline' : 'caret-down-outline'" slot="end" (click)="collapse(i)"></ion-icon>
+			</ion-item>
+		</ion-list>
+	</div>
+	<div *ngSwitchCase="'historial'">
+		<ion-list lines="full" class="ion-no-padding">
+			<ion-item>
+				<ion-grid class="ion-no-padding ion-padding-vertical">
+					<ion-row>
+						<ion-col size="3">
+							<ion-text color="dark"><b>Fecha</b></ion-text>
+						</ion-col>
+						<ion-col size="4">
+							<ion-text color="dark"><b>Nombre</b></ion-text>
+						</ion-col>
+						<ion-col size="5">
+							<ion-text color="dark"><b>Cambio</b></ion-text>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
+			</ion-item>
+			<ion-item *ngFor="let item of this.listaHistorial;">
+				<ion-grid class="ion-no-padding ion-padding-vertical">
+					<ion-row>
+						<ion-col size="3">
+							<ion-text color="dark">{{item['Fecha']}}</ion-text>
+						</ion-col>
+						<ion-col size="4">
+							<ion-text color="dark">{{item['Usuario']}}</ion-text>
+						</ion-col>
+						<ion-col size="5">
+							<ion-text color="dark">{{item['Cambio']}}</ion-text>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
+			</ion-item>
+		</ion-list>
+	</div>
+</ion-content>

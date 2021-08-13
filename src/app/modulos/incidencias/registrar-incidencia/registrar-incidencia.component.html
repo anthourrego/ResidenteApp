@@ -1,0 +1,120 @@
+<ion-header class="ion-no-border header-modal">
+	<ion-toolbar color="ligth" mode='ios'>
+		<ion-title color="dark">
+			Registrar Incidencia
+		</ion-title>
+		<ion-buttons slot="end">
+			<ion-icon color="dark" slot='icon-only' size='large' name='close-outline' (click)="cerrarModal()">
+			</ion-icon>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+	<form [formGroup]="datosFormulario.formulario" (ngSubmit)="guardarIncidencia()">
+		<ion-list lines="full">
+			<div *ngFor="let item of datosFormulario.propiedades;">
+				<ion-item [ngSwitch]="item">
+					<ion-label color="dark" *ngSwitchCase="'TipoIncidenciaId'">
+						Tipo Incidencia
+					</ion-label>
+					<ionic-selectable *ngSwitchCase="'TipoIncidenciaId'" [formControlName]="item" #selectTipoIncidencia
+						placeholder="Seleccion una tipo" itemValueField="TipoIncidenciaId" itemTextField="Nombre"
+						[items]="tiposIncidencias" searchPlaceholder="Buscar" [canSearch]="true">
+						<ng-template ionicSelectableHeaderTemplate>
+							<ion-toolbar>
+								<ion-title slot="start" class="ion-text-left ion-no-padding ion-padding-horizontal">Tipo
+									Incidencia
+								</ion-title>
+								<ion-buttons slot="end">
+									<ion-button (click)="selectTipoIncidencia.close()">
+										<ion-icon color="dark" slot="icon-only" name="close-outline"></ion-icon>
+									</ion-button>
+								</ion-buttons>
+							</ion-toolbar>
+						</ng-template>
+						<ng-template ionicSelectableSearchFailTemplate>
+							<div class="ion-padding ion-text-center">
+								No hay resultados.
+							</div>
+						</ng-template>
+						<ng-template ionicSelectableIconTemplate>
+							<ion-icon name="caret-down-outline"></ion-icon>
+						</ng-template>
+					</ionic-selectable>
+					<ion-label color="dark" *ngSwitchCase="'ItemEquipoId'">
+						Equipo
+					</ion-label>
+					<ionic-selectable *ngSwitchCase="'ItemEquipoId'" [formControlName]="item" #selectEquipo placeholder="Seleccion una equipo" itemValueField="ItemEquipoId" itemTextField="Nombre" [items]="equipos" searchPlaceholder="Buscar" [canSearch]="true">
+						<ng-template ionicSelectableHeaderTemplate>
+							<ion-toolbar>
+								<ion-title slot="start" class="ion-text-left ion-no-padding ion-padding-horizontal">
+									Equipo
+								</ion-title>
+								<ion-buttons slot="end">
+									<ion-button (click)="selectEquipo.close()">
+										<ion-icon color="dark" slot="icon-only" name="close-outline"></ion-icon>
+									</ion-button>
+								</ion-buttons>
+							</ion-toolbar>
+						</ng-template>
+						<ng-template ionicSelectableSearchFailTemplate>
+							<div class="ion-padding ion-text-center">
+								No hay resultados.
+							</div>
+						</ng-template>
+						<ng-template ionicSelectableIconTemplate>
+							<ion-icon name="caret-down-outline"></ion-icon>
+						</ng-template>
+					</ionic-selectable>
+					<ion-grid *ngSwitchCase="'Descripcion'" class="ion-no-padding ion-padding-vertical">
+						<ion-row>
+							<ion-col size="12">
+								<ion-label color="dark">Descripción</ion-label>
+							</ion-col>
+							<ion-col size="12">
+								<ion-textarea rows="3" class="ion-no-padding" [formControlName]="item" color="dark">
+								</ion-textarea>
+							</ion-col>
+						</ion-row>
+					</ion-grid>
+					<ion-grid *ngSwitchCase="'Archivos'" class="ion-no-padding ion-padding-vertical">
+						<ion-row>
+							<ion-col size="12">
+								<ion-label color="dark">Anexar Archivos:</ion-label>
+							</ion-col>
+							<ion-col size="12">
+								<div class="custom-file">
+									<input type="file" class="custom-file-input"
+										accept="application/msword, application/vnd.ms-excel, text/plain, application/pdf, image/*, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+										id="customFile" (change)="onFileChange($event)">
+									<label class="custom-file-label" for="customFile"
+										data-browse="Elegir">{{nombreInputFile}}</label>
+								</div>
+							</ion-col>
+						</ion-row>
+					</ion-grid>
+					<ion-label color="dark" *ngSwitchDefault>
+						{{ item | camelCase | titlecase }}
+					</ion-label>
+					<ion-input [formControlName]="item" *ngSwitchDefault color="dark" class="ion-text-end" type="text">
+					</ion-input>
+				</ion-item>
+				<div class="ion-text-end">
+					<ion-text class="animate__animated animate__bounceIn animate__faster"
+						*ngIf="datosFormulario.formulario.get(item).touched" color="danger">{{
+						datosFormulario.formulario.get(item)['errorMessage'] }}</ion-text>
+				</div>
+			</div>
+		</ion-list>
+		<!-- <ion-button class="ion-margin-top" mode="md" expand="full" type="submit" shape="round">
+			<ion-icon slot="start" name="save"></ion-icon>
+			Registrar
+		</ion-button> -->
+	</form>
+	<ion-fab horizontal="end" vertical="bottom" slot="fixed">
+		<ion-fab-button (click)="guardarIncidencia()">
+			<ion-icon name="save"></ion-icon>
+		</ion-fab-button>
+	</ion-fab>
+</ion-content>

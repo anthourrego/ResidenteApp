@@ -1,0 +1,39 @@
+<ion-header class="ion-no-border header-modal">
+	<ion-toolbar color="ligth" mode='ios'>
+		<ion-title color="dark">
+			{{ accion | titlecase }} Vacuna
+		</ion-title>
+		<ion-buttons slot="end">
+			<ion-icon color="dark" slot='icon-only' size='large' name='close-outline' (click)="cerrarModal()"></ion-icon>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+
+<ion-progress-bar *ngIf="searching" type="indeterminate"></ion-progress-bar>
+
+<ion-content class="ion-padding">
+	<form [formGroup]="datosFormulario.formulario" (ngSubmit)="guardarVacuna()">
+		<ion-list lines="full">
+			<div *ngFor="let item of datosFormulario.propiedades;">
+				<ion-item [ngSwitch]="item">
+					
+					<ion-label color="dark">
+						{{ item | camelCase | titlecase }}
+					</ion-label>
+
+					<ion-datetime *ngSwitchCase="'Fecha'" [formControlName]="item" [pickerOptions]="{'cssClass': 'color-picker'}" cancelText="Cancelar" doneText="Aceptar" display-format="DD-MM-YYYY" [max]="maximoFecha"></ion-datetime>
+
+					<ion-input [formControlName]="item" *ngSwitchDefault color="dark" class="ion-text-end" type="text">	</ion-input>
+				</ion-item>
+				<div class="ion-text-end">
+					<ion-text class="animate__animated animate__bounceIn animate__faster" *ngIf="datosFormulario.formulario.get(item).touched" color="danger">{{ datosFormulario.formulario.get(item)['errorMessage'] }}</ion-text>
+				</div>
+			</div>
+		</ion-list>
+	</form>
+	<ion-fab horizontal="end" vertical="bottom" slot="fixed">
+		<ion-fab-button [disabled]="searching" (click)="guardarVacuna()" *ngIf="accion != 'visualizar'">
+			<ion-icon name="save"></ion-icon>
+		</ion-fab-button>
+	</ion-fab>
+</ion-content>
