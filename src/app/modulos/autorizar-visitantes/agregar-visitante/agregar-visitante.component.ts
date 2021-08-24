@@ -125,7 +125,7 @@ export class AgregarVisitanteComponent implements OnInit {
 			text: 'Cancelar',
 			role: 'cancelar'
 		}];
-		this.notifcaciones.alerta("Seleccionemos tu foto de perfil", botones).then(({ role }) => {
+		this.notifcaciones.alerta("Seleccionemos tu foto de perfil", '', [], botones).then(({ role }) => {
 			if (role == 'camara' || role == 'galeria') {
 				this.camera.getPicture(this['opciones' + role]).then((imageData) => {
 					this.fotoVisitante = imageData;

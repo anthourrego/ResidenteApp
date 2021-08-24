@@ -30,7 +30,6 @@ export class DetallePQRComponent implements OnInit {
 
 	ngOnInit() {
 		this.detallePQR();
-		console.log(this.datos)
 	}
 
 	cerrarModal() {
@@ -45,7 +44,6 @@ export class DetallePQRComponent implements OnInit {
 		this.searching = true;
 		await this.peticionServices.informacion({id: this.datos['PQRId'] }, this.rutaGeneral + 'ver').then(({ success, datos, msg }) => {
 			if (success) {
-				console.log(datos);
 				this.datos = datos.informacion;
 				this.datos['Fecha'] = moment(this.datos['Fecha']).format('DD/MM/YYYY');
 				this.listaNotas = datos.notas;
@@ -98,6 +96,7 @@ export class DetallePQRComponent implements OnInit {
 		if (item.extension == 'jpg' || item.extension == 'jpeg' || item.extension == 'png' || item.extension == 'gif') {
 			/*Aqui*/ 
 			let nit = await this.peticionServices.desencriptar(JSON.parse(await this.storageService.get('usuario').then(resp => resp)));
+			nit = nit['Nit'];
 			const alert = await this.alertController.create({
 				message: '<ion-img src="' + this.rutaFoto + '/uploads/' + nit + '/pqr/' + item.Archivo + '"></ion-img>',
 				buttons: ['OK']

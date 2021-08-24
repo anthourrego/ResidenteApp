@@ -128,7 +128,7 @@ export class LoginPage implements OnInit, ViewWillEnter{
 						this.storageService.set('ingreso', JSON.stringify(respuesta.ingreso));
 						this.storageService.set('logo', JSON.stringify(respuesta.logo));
 						await this.storageService.set('crypt', respuesta.crypt);
-						this.storageService.set('usuario', this.loginService.encriptar(datosUsuario));
+						this.storageService.set('usuario', await this.loginService.encriptar(datosUsuario));
 						this.router.navigateByUrl('/modulos/inicio');
 						this.formLogin.formulario.reset();
 						this.retornar();

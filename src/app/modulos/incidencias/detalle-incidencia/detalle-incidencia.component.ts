@@ -72,7 +72,6 @@ export class DetalleIncidenciaComponent implements OnInit {
 	}
 
 	async abrirArchivo(item){
-		console.log(item);
 		if (item.extension == 'jpg' || item.extension == 'jpeg' || item.extension == 'png' || item.extension == 'gif') {
 			const alert = await this.alertController.create({
 				message: '<ion-img src="' + this.rutaFoto + item.Archivo.substr(2) + '"></ion-img>',

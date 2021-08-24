@@ -29,9 +29,11 @@ export class StorageService {
 	}
 
 	limpiarTodo(logout?) {
+		let tema = this.get('theme');
 		this.storage.clear();
-		if(!logout) this.notifcaciones.alerta("Error de conexión", [{text: 'Cerrar', role: 'aceptar'}]);
-		if(!this.modalController) this.modalController.dismiss();
+		if (!logout) this.notifcaciones.alerta("Error de conexión", '', [], [{ text: 'Cerrar', role: 'aceptar' }]);
+		if (!this.modalController) this.modalController.dismiss();
+		this.set('theme', tema);
 		this.router.navigateByUrl('login');
 	}
 }

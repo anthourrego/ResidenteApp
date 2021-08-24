@@ -50,7 +50,6 @@ export class AutorizarVisitantesPage implements OnInit {
 		this.searching = true;
 		let Tercero = await this.storage.get('nroDocumento');
 		this.visitanteService.informacion({ Tercero }, this.rutaGeneral + 'obtenerVisitantes').then(({ success, msg, vivienda, datos }) => {
-			console.log("vivienda ", vivienda, success);
 			if (success) {
 				datos = datos.map(it => {
 					it.Fecha = moment(it.FechaRegis).format('DD/MM/YYYY');

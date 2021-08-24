@@ -36,6 +36,12 @@ export class MenuComponent implements OnInit, OnDestroy {
 		},
 		{
 			icon: 'newspaper-outline', title: 'Incidencias', path: '/modulos/incidencias'
+		},
+		{
+			icon: 'folder-outline', title: 'Servicios', path: '/modulos/servicios'
+		},
+		{
+			icon: 'cube-outline', title: 'Encomiendas', path: '/modulos/encomiendas'
 		}
 	];
 
@@ -64,8 +70,8 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	async obtenerUsuario() {
-		/*Aqui*/
 		this.datosUsuario = await this.loginService.desencriptar(JSON.parse(await this.storageService.get('usuario').then(resp => resp)));
+		this.datosUsuario = this.datosUsuario['Nombre'];
 	}
 
 	toggleMenu(sesion?: boolean) {
@@ -91,7 +97,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	confirmarCerrarSesion() {
-		this.notificacionesService.alerta('', undefined, undefined, '¿Esta seguro de Cerrar Sesión?').then(respuesta => {
+		this.notificacionesService.alerta('¿Esta seguro de Cerrar Sesión?').then(respuesta => {
 			if (respuesta.role === 'aceptar') {
 				this.cargadorService.presentar().then(resp => {
 					this.loginService.cerrarSesionUser().then(resp => {

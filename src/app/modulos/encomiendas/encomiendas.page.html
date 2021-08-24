@@ -1,0 +1,75 @@
+<app-header titulo="Encomiendas"></app-header>
+
+<ion-progress-bar *ngIf="searching" type="indeterminate"></ion-progress-bar>
+
+<ion-segment value="pendientes" (ionChange)="cambioSegmento($event)" [(ngModel)]="segmento">
+	<ion-segment-button value="pendientes">
+		<ion-label>Pendientes</ion-label>
+	</ion-segment-button>
+	<ion-segment-button value="historico">
+		<ion-label>Historico</ion-label>
+	</ion-segment-button>
+</ion-segment>
+
+<ion-searchbar *ngIf="segmento=='pendientes'" (ionChange)="buscarFiltro('buscarLista', $event)" clearIcon="close-sharp"
+	placeholder="Buscar encomienda" [debounce]="250"></ion-searchbar>
+<ion-searchbar *ngIf="segmento=='historico'" (ionChange)="buscarFiltro('buscarListaHistorico', $event)"
+	clearIcon="close-sharp" placeholder="Buscar historico" [debounce]="250"></ion-searchbar>
+
+<ion-content [ngSwitch]="segmento" color="gray">
+	<ion-refresher *ngSwitchCase="'pendientes'" slot="fixed"
+		(ionRefresh)="obtenerInformacion('EncomiendasPendientes', 'dataEncomiendas', {},  $event)">
+		<ion-refresher-content></ion-refresher-content>
+	</ion-refresher>
+	<div *ngSwitchCase="'pendientes'">
+		<ion-list lines="full" class="ion-no-padding">
+			<ion-item-sliding (click)="sliding('slidingEncomienda' + i)"
+				*ngFor="let item of encomiendas | filtro: 'Nombre': buscarLista; let i = index;"
+				[id]="'slidingEncomienda' + i">
+				<ion-item>
+					<ion-label>
+						<h1>{{ item['Nombre'] }}</h1>
+						<p>{{ item['Observacion'] }}</p>
+					</ion-label>
+					<ion-text class="ion-text-center" color="primary">
+						<p>{{ item['Fecha'] }}</p>
+						<ion-badge color="warning">
+							{{ item['Estado'] }}
+						</ion-badge>
+					</ion-text>
+				</ion-item>
+				<ion-item-options side="end">
+					<ion-item-option slot="end" color="success" (click)="accionEncomienda('recibido', item)">
+						<ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
+					</ion-item-option>
+				</ion-item-options>
+			</ion-item-sliding>
+		</ion-list>
+		<div class="ion-padding ion-text-center nohayresultado" *ngIf="!encomiendas.length && !searching">
+			No tiene encomiendas pendientes.
+		</div>
+	</div>
+	<ion-refresher *ngSwitchCase="'historico'" slot="fixed" (ionRefresh)="refresh($event)">
+		<ion-refresher-content></ion-refresher-content>
+	</ion-refresher>
+	<div *ngSwitchCase="'historico'">
+		<ion-list lines="full" class="ion-no-padding">
+			<ion-item *ngFor="let item of historico | filtro: 'Nombre': buscarListaHistorico;" (click)="verDetalleEncomienda(item)">
+				<ion-label>
+					<h1>{{ item['Nombre'] }}</h1>
+					<p>{{ item['Observacion'] }}</p>
+				</ion-label>
+				<ion-text class="ion-text-center" color="primary">
+					<p>{{ item['Fecha'] }}</p>
+					<ion-badge color="primary">
+						<ion-icon [name]="item['AutorizaPropietario'] == 1 ? 'phone-portrait-outline' : 'pencil-outline'"></ion-icon> 
+						{{ item['Estado'] }}
+					</ion-badge>
+				</ion-text>
+			</ion-item>
+		</ion-list>
+		<div class="ion-padding ion-text-center nohayresultado" *ngIf="!historico.length && !searching">
+			No tiene encomiendas en el historico.
+		</div>
+	</div>
+</ion-content>

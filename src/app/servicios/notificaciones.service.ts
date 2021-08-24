@@ -14,21 +14,21 @@ export class NotificacionesService {
 
 	async notificacion(message: string, duration: number = 3000, position?: 'top' | 'bottom' | 'middle', color?: string, mode?: 'ios' | 'md') {
 		const toast = await this.toastController.create({
-			message, position, animated: true, color, duration, mode,
+		  	message, position, animated: true, color, duration, mode,
 		});
 		return toast.present();
 	}
-
-	async alerta(message: string, buttons?: AlertButton[], inputs?: AlertInput[], header?: string, backdropDismiss?: boolean, mode?: 'ios' | 'md') {
+	
+	async alerta(message: string, header?: string, cssClass?: string[],  buttons?: AlertButton[], inputs?: AlertInput[], backdropDismiss?: boolean, mode?: 'ios' | 'md') {
 		if (!buttons) {
-			buttons = [{
+		  	buttons = [{
 				text: 'Aceptar', role: 'aceptar'
-			}, {
+		  	}, {
 				text: 'Cancelar', role: 'cancelar'
-			}];
+		  	}];
 		}
 		const alerta = await this.alertaController.create({
-			header, message, animated: true, mode, buttons, backdropDismiss, inputs
+		  	header, message, animated: true, mode, buttons, backdropDismiss, inputs, cssClass
 		});
 		await alerta.present();
 		return alerta.onWillDismiss();

@@ -5,6 +5,7 @@ import * as CryptoJS from 'Crypto-js'
 import { Observable } from 'rxjs';
 import { StorageService } from '../../servicios/storage.service';
 import { FuncionesGenerales } from '../funciones/funciones';
+import { NotificacionesService } from 'src/app/servicios/notificaciones.service';
 
 export class CustomInjectorService {
 	static injector: Injector
@@ -16,6 +17,7 @@ export class CustomInjectorService {
 export class PeticionService {
 
 	private storageService: StorageService;
+	private notificacionesService: NotificacionesService;
 	private httpClient: HttpClient;
 	public url: string = environment.urlBack;
 	public categoria: string = 'API/';
@@ -59,7 +61,7 @@ export class PeticionService {
 
 	async informacion(body: object, controlador: string) {
 		const data = {
-			encriptado: this.encriptar(body)
+			encriptado: await this.encriptar(body)
 		}
 		const uri = this.construirUrl(controlador);
 		const Conexion = await this.storageService.get('conexion').then(resp => resp);
@@ -119,4 +121,59 @@ export class PeticionService {
 		}
 		return this.httpClient.post(url, data, { headers });
 	}
+
+	private validarAlertaError(request) {
+		if (request.error != '' && request.error != undefined) {
+			let encabezado = "Se ha producido un problema";
+			let encabezado2 = 'Error';
+			let opciones = [];
+			let mensaje = `Para obtener más información de este problema y posibles correcciones, pulse el botón "Ver Detalle" y comuniquese a la línea de servicio al cliente.`;
+			if (request.error.text != '' && request.error.text != undefined) {
+				mensaje = `Para obtener más información de este problema y posibles correcciones, pulse el botón "Ver Detalle" y comuniquese a la línea de servicio al cliente.`;
+
+				opciones = [
+					{
+						text: 'Ver Detalle',
+						handler: () => {
+							this.notificacionesService.alerta(request.error.text, "Error", ['alerta-error'], 
+								[{ 
+									text: 'Cerrar', 
+									role: 'aceptar', 
+									handler: () => {
+										this.storageService.limpiarTodo(true);
+									} 
+								}]
+							);
+						}
+					}, {
+						text: 'Cerrar',
+						role: 'cancel',
+						handler: () => {
+							this.storageService.limpiarTodo(true);
+						}
+					}
+				];
+			} else {
+				if (request.error.includes('DELETE') && request.error.includes('REFERENCE') && request.error.includes('FK')) {
+					mensaje = 'No se puede eliminar, el registro se encuentra referenciado en otras tablas.';
+					encabezado = 'Error de Integridad';
+					encabezado2 = encabezado;
+				}
+				opciones = [
+					{
+						text: 'Ver Detalle',
+						handler: () => {
+							this.notificacionesService.alerta(request.error, "Error", ['alerta-error'], [{ text: 'Cerrar', role: 'aceptar' }]);
+						}
+					}, {
+						text: 'Cerrar',
+						role: 'cancel'
+					}
+				];
+			}
+			this.notificacionesService.alerta(mensaje, encabezado, [], opciones);
+
+		}
+	}
+
 }

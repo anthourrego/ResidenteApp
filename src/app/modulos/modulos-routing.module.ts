@@ -32,6 +32,14 @@ const routes: Routes = [
   {
     path: 'incidencias',
     loadChildren: () => import('./incidencias/incidencias.module').then( m => m.IncidenciasPageModule)
+  },
+  {
+    path: 'servicios',
+    loadChildren: () => import('./servicios/servicios.module').then( m => m.ServiciosPageModule)
+  },
+  {
+    path: 'encomiendas',
+    loadChildren: () => import('./encomiendas/encomiendas.module').then( m => m.EncomiendasPageModule)
   }
 
 ]

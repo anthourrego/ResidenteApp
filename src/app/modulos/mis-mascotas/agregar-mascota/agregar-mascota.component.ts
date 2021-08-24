@@ -124,7 +124,7 @@ export class AgregarMascotaComponent implements OnInit {
 			text: 'Cancelar',
 			role: 'cancelar'
 		}];
-		this.notifcaciones.alerta("Seleccione", botones).then(({ role }) => {
+		this.notifcaciones.alerta("Seleccione", '', [],botones).then(({ role }) => {
 			if (role == 'camara' || role == 'galeria') {
 				this.camera.getPicture(this['opciones' + role]).then((imageData) => {
 					this.fotoMascota = imageData;

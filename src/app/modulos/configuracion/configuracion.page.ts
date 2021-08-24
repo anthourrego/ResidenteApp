@@ -69,7 +69,7 @@ export class ConfiguracionPage implements OnInit, AfterViewInit {
 			}
 		];
 		if (!event?.detail.checked) {
-			this.notificaciones.alerta('Restaurar tamaño de letra?', opciones);
+			this.notificaciones.alerta('Restaurar tamaño de letra?', '', [], opciones);
 		} else {
 			this.range.disabled = false;
 			this.theme.appliedSize = true;

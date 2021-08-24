@@ -1,0 +1,36 @@
+<ion-header class="ion-no-border">
+	<ion-toolbar color="ligth" mode='ios'>
+		<ion-title color="dark">
+			Detalle Historico
+		</ion-title>
+		<ion-buttons slot="end">
+			<ion-icon color="dark" slot='icon-only' size='large' name='close-outline' (click)="cerrarModal()">
+			</ion-icon>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<ion-card class="ion-margin">
+		<ion-card-header class="ion-no-padding ion-padding-horizontal">
+			<ion-card-subtitle class="ion-justify-content-between ion-align-items-center">
+				<ion-text color="primary">
+					<h5>{{ datos['Nombre'] }}</h5>
+				</ion-text>
+				<ion-badge color="primary">
+					<ion-icon [name]="datos['AutorizaPropietario'] == 1 ? 'phone-portrait-outline' : 'pencil-outline'">
+					</ion-icon>
+					{{ datos['Estado'] }}
+				</ion-badge>
+			</ion-card-subtitle>
+		</ion-card-header>
+		<ion-card-content>
+			<ion-list lines="full">
+				<ion-item *ngFor="let item of columnas;">
+					<ion-label color="dark" slot="start">{{ item.titulo }}</ion-label>
+					<ion-note color="dark" slot="end">{{ datos[item.valor]}}</ion-note>
+				</ion-item>
+			</ion-list>
+		</ion-card-content>
+	</ion-card>
+</ion-content>
