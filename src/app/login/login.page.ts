@@ -18,12 +18,12 @@ import { ThemeService } from '../servicios/theme.service';
 	templateUrl: './login.page.html',
 	styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit, ViewWillEnter{
+export class LoginPage implements OnInit, ViewWillEnter {
 
-  	formLogin: { formulario: RxFormGroup, propiedades: Array<string> };
-  	ingresoDocumento: Boolean = true;
+	formLogin: { formulario: RxFormGroup, propiedades: Array<string> };
+	ingresoDocumento: Boolean = true;
 	conjuntos: Array<Object>;
-		
+
 	claseDocumento: string = '';
 	claseUsuario: string = '';
 	verPassword: Boolean = false;
@@ -38,7 +38,7 @@ export class LoginPage implements OnInit, ViewWillEnter{
 		private loginService: LoginService,
 		private storageService: StorageService,
 		private cargadorService: CargadorService,
-  	) {}
+	) { }
 
 	ngOnInit() {
 		this.configForm();
@@ -70,7 +70,7 @@ export class LoginPage implements OnInit, ViewWillEnter{
 														background-attachment: fixed;`);
 	}
 
-  	irFormulario() {
+	irFormulario() {
 		this.cargadorService.presentar().then(resp => {
 			if (this.formLogin.formulario.get('nroDocumento').valid) {
 				const nroDocumento = this.formLogin.formulario.get('nroDocumento').value;
@@ -81,9 +81,9 @@ export class LoginPage implements OnInit, ViewWillEnter{
 						if (this.conjuntos.length == 1) {
 							this.formLogin.formulario.get('conjunto').setValue(this.conjuntos[0]);
 							this.formLogin.formulario.get('nombreUsuario').setValue(this.conjuntos[0]['Nombre']);
-							this.formLogin.formulario.get('usuario').setValue(this.conjuntos[0]['CodigoUsuario']);	
+							this.formLogin.formulario.get('usuario').setValue(this.conjuntos[0]['CodigoUsuario']);
 							this.urlFondoImagen = environment.urlBack + this.conjuntos[0]['Fondo'];
-							this.urlFondoImagenSize = "cover";	
+							this.urlFondoImagenSize = "cover";
 						}
 						this.claseDocumento = 'animate__fadeOutLeft';
 						this.ejecutarTimer('claseUsuario', 'animate__fadeInRight').then(item => this.ingresoDocumento = !this.ingresoDocumento);
@@ -124,12 +124,18 @@ export class LoginPage implements OnInit, ViewWillEnter{
 				this.loginService.iniciarSesionUser(data).then(async respuesta => {
 					if (respuesta && respuesta.valido) {
 						const datosUsuario = this.formLogin.formulario.get('conjunto').value;
+						datosUsuario['Nombre'] = respuesta?.usuario?.nombre;
+						datosUsuario['ActualizaDatos'] = respuesta?.usuario.ActualizaDatos;
 						this.storageService.set('conexion', JSON.stringify(respuesta.db));
 						this.storageService.set('ingreso', JSON.stringify(respuesta.ingreso));
 						this.storageService.set('logo', JSON.stringify(respuesta.logo));
 						await this.storageService.set('crypt', respuesta.crypt);
 						this.storageService.set('usuario', await this.loginService.encriptar(datosUsuario));
-						this.router.navigateByUrl('/modulos/inicio');
+						if (!respuesta?.usuario.ActualizaDatos) {
+							this.router.navigateByUrl('/modulos/mi-perfil');
+						} else {
+							this.router.navigateByUrl('/modulos/inicio');
+						}
 						this.formLogin.formulario.reset();
 						this.retornar();
 					} else {
@@ -150,6 +156,6 @@ export class LoginPage implements OnInit, ViewWillEnter{
 		this.urlFondoImagen = environment.urlBack + event.value.Fondo;
 		this.urlFondoImagenSize = "cover";
 		this.formLogin.formulario.get('nombreUsuario').setValue(event.value.Nombre);
-		this.formLogin.formulario.get('usuario').setValue(event.value.CodigoUsuario);	
+		this.formLogin.formulario.get('usuario').setValue(event.value.CodigoUsuario);
 	}
 }

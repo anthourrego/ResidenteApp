@@ -1,0 +1,40 @@
+<app-header titulo="Mi Perfil"></app-header>
+
+<ion-progress-bar *ngIf="searching" type="indeterminate"></ion-progress-bar>
+
+<ion-content>
+
+	<div class="foto-perfil">
+		<ion-avatar>
+			<img [src]="fotoDePerfil ? fotoDePerfil : 'assets/img/nofoto.png'" />
+		</ion-avatar>
+		<ion-button (click)="obtenerFotoPerfil()">
+			<ion-icon slot="icon-only" name="camera"></ion-icon>
+		</ion-button>
+	</div>
+
+	<form [formGroup]="datosFormulario.formulario">
+		<ion-list lines="full">
+			<ion-item [ngSwitch]="item" *ngFor="let item of datosFormulario.propiedades;">
+				<ion-label color="dark">{{ (item == 'fechanacim' ? 'fechaNacimiento' : item) | camelCase | titlecase }}
+				</ion-label>
+				<ion-datetime [formControlName]="item" *ngSwitchCase="'fechanacim'"
+					[pickerOptions]="{'cssClass': 'color-picker'}" display-format="DD-MM-YYYY" cancelText="Cancelar"
+					doneText="Aceptar" [max]="maximoFechanacimiento">
+				</ion-datetime>
+				<ion-select [formControlName]="item" *ngSwitchCase="'sexo'" okText="Aceptar" cancelText="Cancelar"
+					[interfaceOptions]="{cssClass: 'modal-color'}" placeholder="Selecciona el Genero">
+					<ion-select-option color="dark" *ngFor="let item of generos;" [value]="item.valor">{{ item.titulo }}
+					</ion-select-option>
+				</ion-select>
+				<ion-input [formControlName]="item" *ngSwitchDefault color="dark" class="ion-text-end"
+					[type]="item === 'email' ? item : 'text'">
+				</ion-input>
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get(item).touched" color="danger">{{
+					datosFormulario.formulario.get(item)['errorMessage'] }}</ion-text>
+			</ion-item>
+		</ion-list>
+	</form>
+
+</ion-content>

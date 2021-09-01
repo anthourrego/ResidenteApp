@@ -40,6 +40,10 @@ const routes: Routes = [
   {
     path: 'encomiendas',
     loadChildren: () => import('./encomiendas/encomiendas.module').then( m => m.EncomiendasPageModule)
+  },
+  {
+    path: 'mi-perfil',
+    loadChildren: () => import('./mi-perfil/mi-perfil.module').then( m => m.MiPerfilPageModule)
   }
 
 ]

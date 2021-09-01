@@ -1,0 +1,28 @@
+.foto-perfil {
+	display: flex;
+	justify-content: center;
+	ion-avatar {
+		width: 200px;
+		height: 200px;
+	}
+	ion-button {
+		position: absolute;
+		top: 170px;
+		z-index: 3;
+		width: 40px;
+		font-size: 10px;
+		height: 40px;
+		--border-radius: 50%;
+	}
+}
+ion-list {
+	ion-item {
+		ion-select,
+		ion-datetime {
+			color: var(--ion-color-dark);
+		}
+		ion-text {
+			font-size: 13px !important;
+		}
+	}
+}

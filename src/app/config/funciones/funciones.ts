@@ -45,4 +45,22 @@ export class FuncionesGenerales {
 		return { fecha, programa, cambio };
 	}
 
+	static textoConEspacios(valor: string, cant: number = 1) {
+		let retorno = '';
+		let espacios = 0;
+		for (let i = 0; i < valor.length; i++) {
+			const element = valor[i];
+			if (element != ' ') {
+				espacios = 0;
+				retorno += valor[i];
+			} else if (!espacios) {
+				for (let j = 0; j < cant; j++) {
+					retorno += ' ';
+				}
+				espacios = cant;
+			}
+		}
+		return retorno;
+	}
+
 }

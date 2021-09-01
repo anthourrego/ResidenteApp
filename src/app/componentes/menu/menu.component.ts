@@ -121,4 +121,8 @@ export class MenuComponent implements OnInit, OnDestroy {
 		if (validarLogo != '') this.logo = this.loginService.url + validarLogo;
 	}
 
+	irMiPerfil() {
+		this.router.navigateByUrl('modulos/mi-perfil');
+	}
+
 }

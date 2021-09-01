@@ -1,5 +1,6 @@
-<ion-menu (ionWillOpen)="obtenerUsuario()" side="start" type='overlay' [swipeGesture]="appMenuSwipeGesture" menuId="first" contentId="main-cont"
-	(ionDidOpen)="appMenuSwipeGesture = false" (ionDidClose)="appMenuSwipeGesture = true">
+<ion-menu (ionWillOpen)="obtenerUsuario()" side="start" type='overlay' [swipeGesture]="appMenuSwipeGesture"
+	menuId="first" contentId="main-cont" (ionDidOpen)="appMenuSwipeGesture = false"
+	(ionDidClose)="appMenuSwipeGesture = true">
 	<ion-header class="ion-no-border">
 		<ion-toolbar>
 			<ion-buttons slot="start">
@@ -13,14 +14,15 @@
 				</ion-button>
 			</ion-buttons>
 		</ion-toolbar>
-		<ion-img class="ion-margin-top" [src]="logo"></ion-img>
-		<ion-text class="w-100" color="dark">
+		<ion-img class="ion-margin-top" (click)="irMiPerfil()" [src]="logo"></ion-img>
+		<ion-text class="w-100" color="dark" (click)="irMiPerfil()">
 			<h4 class="ion-margin text-truncate">{{this.datosUsuario}}</h4>
 		</ion-text>
 	</ion-header>
 	<ion-content>
 		<ion-list mode="ios">
-			<ion-item (click)="toggleMenu(); irPagina(men.path)" routerLink="{{men.path}}" routerLinkActive="router-link-active" lines="full" *ngFor="let men of menus;">
+			<ion-item (click)="toggleMenu(); irPagina(men.path)" routerLink="{{men.path}}"
+				routerLinkActive="router-link-active" lines="full" *ngFor="let men of menus;">
 				<ion-icon slot="start" [name]="men.icon" color="dark"></ion-icon>
 				<ion-label [ngClass]="size" color="dark">{{ men.title }}</ion-label>
 				<ion-badge *ngIf="men.badge" color="primary">42</ion-badge>

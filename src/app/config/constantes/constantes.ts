@@ -1,11 +1,11 @@
 export class Constantes {
-    static valoresTemas = [{
+	static valoresTemas = [{
 		titulo: 'Oscuro', valor: 'dark'
 	}, {
 		titulo: 'Estandar', valor: 'estandar'
 	}];
 
-    static temas = [{
+	static temas = [{
 		name: 'dark',
 		styles: [
 			{ themeVariable: '--ion-color-primary', value: '#737373' },
@@ -60,9 +60,12 @@ export class Constantes {
 			{ themeVariable: '--text-toolbar', value: '#ffffff' },
 			{ themeVariable: '--header-menu', value: '#a526bd' },
 			{ themeVariable: '--toolbar-menu', value: '#f1f1f1' }
-
-
 		]
+	}];
 
+	static generos = [{
+		valor: 'M', titulo: 'Masculino'
+	}, {
+		valor: 'F', titulo: 'Femenino'
 	}];
 }

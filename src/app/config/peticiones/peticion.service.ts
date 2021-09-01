@@ -135,13 +135,13 @@ export class PeticionService {
 					{
 						text: 'Ver Detalle',
 						handler: () => {
-							this.notificacionesService.alerta(request.error.text, "Error", ['alerta-error'], 
-								[{ 
-									text: 'Cerrar', 
-									role: 'aceptar', 
+							this.notificacionesService.alerta(request.error.text, "Error", ['alerta-error'],
+								[{
+									text: 'Cerrar',
+									role: 'aceptar',
 									handler: () => {
 										this.storageService.limpiarTodo(true);
-									} 
+									}
 								}]
 							);
 						}
