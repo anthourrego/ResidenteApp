@@ -2,11 +2,11 @@
 
 <ion-progress-bar *ngIf="searching" type="indeterminate"></ion-progress-bar>
 
-<ion-content>
+<ion-content class="ion-padding-top">
 
 	<div class="foto-perfil">
 		<ion-avatar>
-			<img [src]="fotoDePerfil ? fotoDePerfil : 'assets/img/nofoto.png'" />
+			<img [src]="fotoDePerfil ? (extBase64 + fotoDePerfil) : 'assets/img/nofoto.png'" />
 		</ion-avatar>
 		<ion-button (click)="obtenerFotoPerfil()">
 			<ion-icon slot="icon-only" name="camera"></ion-icon>
@@ -15,24 +15,171 @@
 
 	<form [formGroup]="datosFormulario.formulario">
 		<ion-list lines="full">
-			<ion-item [ngSwitch]="item" *ngFor="let item of datosFormulario.propiedades;">
-				<ion-label color="dark">{{ (item == 'fechanacim' ? 'fechaNacimiento' : item) | camelCase | titlecase }}
-				</ion-label>
-				<ion-datetime [formControlName]="item" *ngSwitchCase="'fechanacim'"
-					[pickerOptions]="{'cssClass': 'color-picker'}" display-format="DD-MM-YYYY" cancelText="Cancelar"
-					doneText="Aceptar" [max]="maximoFechanacimiento">
+			<ion-item-divider color="gray">
+				<ion-label>Datos personales</ion-label>
+			</ion-item-divider>
+			<ion-item>
+				<ion-label position="floating" color="dark">Nombre Uno</ion-label>
+				<ion-input formControlName="nombruno" color="dark" type="text"></ion-input>
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get('nombruno').touched" color="danger">{{
+					datosFormulario.formulario.get('nombruno')['errorMessage'] }}</ion-text>
+			</ion-item>
+			<ion-item>
+				<ion-label position="floating" color="dark">Nombre Dos</ion-label>
+				<ion-input formControlName="nombrdos" color="dark" type="text"></ion-input>
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get('nombrdos').touched" color="danger">{{
+					datosFormulario.formulario.get('nombrdos')['errorMessage'] }}</ion-text>
+			</ion-item>
+			<ion-item>
+				<ion-label position="floating" color="dark">Nombre Uno</ion-label>
+				<ion-input formControlName="apelluno" color="dark" type="text"></ion-input>
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get('apelluno').touched" color="danger">{{
+					datosFormulario.formulario.get('apelluno')['errorMessage'] }}</ion-text>
+			</ion-item>
+			<ion-item>
+				<ion-label position="floating" color="dark">Nombre Uno</ion-label>
+				<ion-input formControlName="apelldos" color="dark" type="text"></ion-input>
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get('apelldos').touched" color="danger">{{
+					datosFormulario.formulario.get('apelldos')['errorMessage'] }}</ion-text>
+			</ion-item>
+			<ion-item>
+				<ion-label position="floating" color="dark">Fecha de Nacimiento</ion-label>
+				<ion-datetime formControlName="fechanacim" [pickerOptions]="{'cssClass': 'color-picker'}"
+					display-format="DD-MM-YYYY" cancelText="Cancelar" doneText="Aceptar" [max]="maximoFechanacimiento">
 				</ion-datetime>
-				<ion-select [formControlName]="item" *ngSwitchCase="'sexo'" okText="Aceptar" cancelText="Cancelar"
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get('fechanacim').touched" color="danger">{{
+					datosFormulario.formulario.get('fechanacim')['errorMessage'] }}</ion-text>
+			</ion-item>
+			<ion-item>
+				<ion-label position="floating" color="dark">Sexo</ion-label>
+				<ion-select formControlName="sexo" okText="Aceptar" cancelText="Cancelar"
 					[interfaceOptions]="{cssClass: 'modal-color'}" placeholder="Selecciona el Genero">
 					<ion-select-option color="dark" *ngFor="let item of generos;" [value]="item.valor">{{ item.titulo }}
 					</ion-select-option>
 				</ion-select>
-				<ion-input [formControlName]="item" *ngSwitchDefault color="dark" class="ion-text-end"
-					[type]="item === 'email' ? item : 'text'">
-				</ion-input>
 				<ion-text class="animate__animated animate__bounceIn animate__faster"
-					*ngIf="datosFormulario.formulario.get(item).touched" color="danger">{{
-					datosFormulario.formulario.get(item)['errorMessage'] }}</ion-text>
+					*ngIf="datosFormulario.formulario.get('sexo').touched" color="danger">{{
+					datosFormulario.formulario.get('sexo')['errorMessage'] }}</ion-text>
+			</ion-item>
+			<ion-item>
+				<ion-label position="floating" color="dark">Correo electronico</ion-label>
+				<ion-input formControlName="email" color="dark" type="text"></ion-input>
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get('email').touched" color="danger">{{
+					datosFormulario.formulario.get('email')['errorMessage'] }}</ion-text>
+			</ion-item>
+			<ion-item>
+				<ion-label position="floating" color="dark">Correo electronico 2</ion-label>
+				<ion-input formControlName="email2" color="dark" type="text"></ion-input>
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get('email2').touched" color="danger">{{
+					datosFormulario.formulario.get('email2')['errorMessage'] }}</ion-text>
+			</ion-item>
+			<ion-item>
+				<ion-label position="floating" color="dark">Celular</ion-label>
+				<ion-input formControlName="celular" color="dark" type="text"></ion-input>
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get('celular').touched" color="danger">{{
+					datosFormulario.formulario.get('celular')['errorMessage'] }}</ion-text>
+			</ion-item>
+			<app-select-mi-perfil (valorSelect)="cambiosComponenteSelect($event, 'estadocivilid')"
+				[cambiovalor]="cambiovalor" [lista]="estadoCivil" [formulario]="datosFormulario.formulario"
+				valueField="estadocivilid" formControlSelect="estadocivilid" textField="nombre" title="Estado Civil">
+			</app-select-mi-perfil>
+			<ion-item>
+				<ion-label position="floating" color="dark">Número de tarjeta</ion-label>
+				<ion-input formControlName="numercredi" color="dark" type="text"></ion-input>
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get('numercredi').touched" color="danger">{{
+					datosFormulario.formulario.get('numercredi')['errorMessage'] }}</ion-text>
+			</ion-item>
+			<ion-item>
+				<ion-label position="floating" color="dark">Ocupación</ion-label>
+				<ion-input formControlName="ocupacion" color="dark" type="text"></ion-input>
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get('ocupacion').touched" color="danger">{{
+					datosFormulario.formulario.get('ocupacion')['errorMessage'] }}</ion-text>
+			</ion-item>
+
+			<ion-item-divider color="gray">
+				<ion-label>Dirección Residencia</ion-label>
+			</ion-item-divider>
+			<ion-item>
+				<ion-label position="floating" color="dark">Dirección</ion-label>
+				<ion-input formControlName="direccion" color="dark" type="text"></ion-input>
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get('direccion').touched" color="danger">{{
+					datosFormulario.formulario.get('direccion')['errorMessage'] }}</ion-text>
+			</ion-item>
+			<app-select-mi-perfil (valorSelect)="cambiosComponenteSelect($event, 'paisid')" [cambiovalor]="cambiovalor"
+				[lista]="localizaciones['paises']" [formulario]="datosFormulario.formulario" valueField="paisid"
+				formControlSelect="paisid" textField="nombre" title="Paises">
+			</app-select-mi-perfil>
+			<app-select-mi-perfil (valorSelect)="cambiosComponenteSelect($event, 'dptoid')" [cambiovalor]="cambiovalor"
+				[lista]="localizaciones['deptos']" [formulario]="datosFormulario.formulario" valueField="dptoid"
+				formControlSelect="dptoid" textField="nombre" title="Departamentos">
+			</app-select-mi-perfil>
+			<app-select-mi-perfil (valorSelect)="cambiosComponenteSelect($event, 'ciudadid')"
+				[cambiovalor]="cambiovalor" [lista]="localizaciones['ciudades']"
+				[formulario]="datosFormulario.formulario" valueField="ciudadid" formControlSelect="ciudadid"
+				textField="nombre" title="Ciudades">
+			</app-select-mi-perfil>
+			<app-select-mi-perfil (valorSelect)="cambiosComponenteSelect($event, 'barrioid')"
+				[cambiovalor]="cambiovalor" [lista]="localizaciones['barrios']"
+				[formulario]="datosFormulario.formulario" valueField="barrioid" formControlSelect="barrioid"
+				textField="nombre" title="Barrios">
+			</app-select-mi-perfil>
+			<app-select-mi-perfil (valorSelect)="cambiosComponenteSelect($event, 'zonaid')" [cambiovalor]="cambiovalor"
+				[lista]="localizaciones['zonas']" [formulario]="datosFormulario.formulario" valueField="zonaid"
+				formControlSelect="zonaid" textField="nombre" title="Zonas">
+			</app-select-mi-perfil>
+			<ion-item>
+				<ion-label position="floating" color="dark">Telefono</ion-label>
+				<ion-input formControlName="telefono" color="dark" type="text"></ion-input>
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get('telefono').touched" color="danger">{{
+					datosFormulario.formulario.get('telefono')['errorMessage'] }}</ion-text>
+			</ion-item>
+
+			<ion-item-divider color="gray">
+				<ion-label>Dirección Correspondencia</ion-label>
+			</ion-item-divider>
+			<ion-item>
+				<ion-label position="floating" color="dark">Dirección</ion-label>
+				<ion-input formControlName="direccorre" color="dark" type="text"></ion-input>
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get('direccorre').touched" color="danger">{{
+					datosFormulario.formulario.get('direccorre')['errorMessage'] }}</ion-text>
+			</ion-item>
+			<app-select-mi-perfil (valorSelect)="cambiosComponenteSelect($event, 'paiscorre')"
+				[cambiovalor]="cambiovalor" [lista]="localizaciones['paises']" [formulario]="datosFormulario.formulario"
+				valueField="paisid" formControlSelect="paiscorre" textField="nombre" title="Paises">
+			</app-select-mi-perfil>
+			<app-select-mi-perfil (valorSelect)="cambiosComponenteSelect($event, 'dptocorre')"
+				[cambiovalor]="cambiovalor" [lista]="localizaciones['deptos']" [formulario]="datosFormulario.formulario"
+				valueField="dptoid" formControlSelect="dptocorre" textField="nombre" title="Departamentos">
+			</app-select-mi-perfil>
+			<app-select-mi-perfil (valorSelect)="cambiosComponenteSelect($event, 'ciudacorre')"
+				[cambiovalor]="cambiovalor" [lista]="localizaciones['ciudades']"
+				[formulario]="datosFormulario.formulario" valueField="ciudadid" formControlSelect="ciudacorre"
+				textField="nombre" title="Ciudades">
+			</app-select-mi-perfil>
+			<app-select-mi-perfil (valorSelect)="cambiosComponenteSelect($event, 'barricorre')"
+				[cambiovalor]="cambiovalor" [lista]="localizaciones['barrios']"
+				[formulario]="datosFormulario.formulario" valueField="barrioid" formControlSelect="barricorre"
+				textField="nombre" title="Barrios">
+			</app-select-mi-perfil>
+			<ion-item>
+				<ion-label position="floating" color="dark">Telefono</ion-label>
+				<ion-input formControlName="telefcorre" color="dark" type="text"></ion-input>
+				<ion-text class="animate__animated animate__bounceIn animate__faster"
+					*ngIf="datosFormulario.formulario.get('telefcorre').touched" color="danger">{{
+					datosFormulario.formulario.get('telefcorre')['errorMessage'] }}</ion-text>
 			</ion-item>
 		</ion-list>
 	</form>

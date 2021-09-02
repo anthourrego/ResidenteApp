@@ -25,27 +25,33 @@ export class MiPerfilPage implements OnInit {
 	maximoFechanacimiento = moment().format('YYYY-MM-DD');
 	// Opciones de la camara
 	opcionescamara: CameraOptions = {
-		quality: 80, // De 0 a 100
+		quality: 100, // De 0 a 100
 		destinationType: this.camera.DestinationType.DATA_URL,
 		encodingType: this.camera.EncodingType.JPEG,
 		mediaType: this.camera.MediaType.PICTURE,
-		allowEdit: true,
+		allowEdit: false,
+		correctOrientation: true
 	};
 	// Opciones de la galeria
 	opcionesgaleria: CameraOptions = {
-		quality: 80, // De 0 a 100
+		quality: 100, // De 0 a 100
 		sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
 		destinationType: this.camera.DestinationType.DATA_URL,
-		allowEdit: true,
+		allowEdit: false,
+		correctOrientation: true
 	};
 	fotoDePerfil: string;
 	subject = new Subject();
 	subjectMenu = new Subject();
 	terceroId: string;
 	searching: boolean = true;
-	extBase64: string = 'data:image/jpeg;base64,';
+	extBase64: string = 'data:image/jpg;base64,';
 	datosForm = {};
 	datosUsuario;
+	localizaciones: any = {};
+	estadoCivil: any = [];
+	datosSeleccionados = {};
+	cambiovalor: boolean;
 
 	constructor(
 		private notificacionService: NotificacionesService,
@@ -95,11 +101,12 @@ export class MiPerfilPage implements OnInit {
 
 	guardarInformacion() {
 		this.datosForm = Object.assign({}, this.datosFormulario.formulario.value);
-		this.datosForm = Object.assign(this.datosForm, this.obtenerCampo('nombre', 'nombr'));
-		this.datosForm = Object.assign(this.datosForm, this.obtenerCampo('apellidos', 'apell'));
 		this.datosForm['fechanacim'] = moment(this.datosForm['fechanacim']).format('YYYY-MM-DD');
 		this.datosForm['terceroId'] = this.terceroId;
-		this.datosForm['ActualizaDatos'] = this.datosUsuario['ActualizaDatos'];
+		this.datosForm = { ActualizaDatos: this.datosUsuario['ActualizaDatos'], ...this.datosForm };
+		Object.keys(this.datosSeleccionados).forEach(it => {
+			this.datosForm[it] = this.datosSeleccionados[it];
+		});
 		this.obtenerInformacion('guardarDatos', 'datosGuardados', this.datosForm);
 	}
 
@@ -111,6 +118,7 @@ export class MiPerfilPage implements OnInit {
 			this.datosUsuario['ActualizaDatos'] = moment().toDate();
 			this.storage.set('usuario', await this.miPerfilService.encriptar(this.datosUsuario));
 		}
+		this.cambiovalor = !this.cambiovalor;
 		this.suscripcionCambios();
 	}
 
@@ -131,18 +139,6 @@ export class MiPerfilPage implements OnInit {
 		}).catch(error => console.log("Error ", error));
 	}
 
-	obtenerCampo(llave: string, campo: string) {
-		const propiedad = this.datosFormulario.formulario.get(llave).value;
-		let valor = FuncionesGenerales.textoConEspacios(propiedad);
-		let info = {};
-		let array = valor.split(' ', 2);
-		// El espacio de string es segun la cantidad que se le envie a la funcion testoConEspacios
-		let restante = valor.replace(array[0] + ' ' + (array[1] ? array[1] : ''), '');
-		info[campo + 'uno'] = array[0];
-		info[campo + 'dos'] = (array[1] ? array[1] + restante : '');
-		return info
-	}
-
 	obtenerFotoPerfil() {
 		const botones = [{
 			text: 'Camara',
@@ -161,8 +157,10 @@ export class MiPerfilPage implements OnInit {
 					this.notificacionService.notificacion("Imagen tomada con exito");
 					this.actualizarFotoPerfil(imageData);
 				}, (err) => {
-					this.fotoDePerfil = null;
-					this.notificacionService.notificacion("Error al tomar imagen");
+					if (err != "No Image Selected") {
+						this.fotoDePerfil = null;
+						this.notificacionService.notificacion("Error al tomar imagen");
+					}
 				});
 			}
 		}, error => console.log("Error ", error));
@@ -173,7 +171,7 @@ export class MiPerfilPage implements OnInit {
 		this.miPerfilService.informacion(datos, this.rutaGeneral + 'fotoPerfil').then(async ({ mensaje, valido, archivo }) => {
 			this.notificacionService.notificacion(mensaje);
 			if (valido) {
-				this.fotoDePerfil = this.extBase64 + archivo;
+				this.fotoDePerfil = archivo;
 				let user = await this.storage.get('usuario').then(resp => resp);
 				user = this.miPerfilService.desencriptar(JSON.parse(user));
 				user.foto = archivo;
@@ -187,17 +185,26 @@ export class MiPerfilPage implements OnInit {
 	}
 
 	obtenerDatosUsuario() {
-		this.miPerfilService.informacion({}, this.rutaGeneral + 'usuarioLogueado').then(({ datos }) => {
+		this.miPerfilService.informacion({}, this.rutaGeneral + 'usuarioLogueado').then(({ datos, localizaciones, estadoCivil }) => {
 			if (datos) {
+				this.localizaciones = JSON.parse(localizaciones);
+				this.estadoCivil = JSON.parse(estadoCivil);
 				this.terceroId = datos['TerceroID'];
 				this.datosFormulario.formulario.patchModelValue(datos);
 				if (datos['foto'] != '') {
-					this.fotoDePerfil = this.extBase64 + datos['foto'];
+					this.fotoDePerfil = datos['foto'];
 				}
 				this.suscripcionCambios();
 			}
 			this.searching = false;
 		}).catch(error => console.log("Error ", error));
 	}
+
+	cambiosComponenteSelect(evento, key) {
+		this.datosSeleccionados[evento.control] = evento.valor[evento.key];
+		this.guardarInformacion();
+	}
+
+
 
 }

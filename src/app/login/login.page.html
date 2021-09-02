@@ -46,7 +46,7 @@
 							<ion-icon name="caret-down-outline"></ion-icon>
 						</ng-template>
 					</ionic-selectable>
-					<ion-input *ngIf="conjuntos.length == 1" readonly>{{ this.conjuntos[0].Conjunto }}</ion-input>
+					<ion-input *ngIf="conjuntos.length == 1" readonly>{{ this.conjuntos[0]['Conjunto'] }}</ion-input>
 				</ion-item>
 				<ion-text class="animate__animated animate__bounceIn animate__faster validadores"
 					*ngIf="formLogin.formulario.get('conjunto').touched">
@@ -54,7 +54,7 @@
 				</ion-text>
 				<ion-item class="ion-margin-top" lines="none">
 					<ion-icon class="ion-margin-end" slot="start" name="person-outline"></ion-icon>
-					<ion-input formControlName="nombreUsuario" readonly [value]="this.conjuntos[0].Nombre"
+					<ion-input formControlName="nombreUsuario" readonly [value]="this.conjuntos[0]['Nombre']"
 						placeholder="Usuario..."></ion-input>
 				</ion-item>
 				<ion-item class="ion-margin-top" lines="none">

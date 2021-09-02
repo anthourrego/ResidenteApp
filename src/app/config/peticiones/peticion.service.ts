@@ -77,7 +77,9 @@ export class PeticionService {
 			} else {
 				return desencriptado;
 			}
-		}, console.error);
+		}).catch((request) => {
+			this.validarAlertaError(request);
+		});
 	}
 
 	private construirUrl(controlador) {
@@ -131,45 +133,41 @@ export class PeticionService {
 			if (request.error.text != '' && request.error.text != undefined) {
 				mensaje = `Para obtener más información de este problema y posibles correcciones, pulse el botón "Ver Detalle" y comuniquese a la línea de servicio al cliente.`;
 
-				opciones = [
-					{
-						text: 'Ver Detalle',
-						handler: () => {
-							this.notificacionesService.alerta(request.error.text, "Error", ['alerta-error'],
-								[{
-									text: 'Cerrar',
-									role: 'aceptar',
-									handler: () => {
-										this.storageService.limpiarTodo(true);
-									}
-								}]
-							);
-						}
-					}, {
-						text: 'Cerrar',
-						role: 'cancel',
-						handler: () => {
-							this.storageService.limpiarTodo(true);
-						}
+				opciones = [{
+					text: 'Ver Detalle',
+					handler: () => {
+						this.notificacionesService.alerta(request.error.text, "Error", ['alerta-error'],
+							[{
+								text: 'Cerrar',
+								role: 'aceptar',
+								handler: () => {
+									this.storageService.limpiarTodo(true);
+								}
+							}]
+						);
 					}
-				];
+				}, {
+					text: 'Cerrar',
+					role: 'cancel',
+					handler: () => {
+						this.storageService.limpiarTodo(true);
+					}
+				}];
 			} else {
 				if (request.error.includes('DELETE') && request.error.includes('REFERENCE') && request.error.includes('FK')) {
 					mensaje = 'No se puede eliminar, el registro se encuentra referenciado en otras tablas.';
 					encabezado = 'Error de Integridad';
 					encabezado2 = encabezado;
 				}
-				opciones = [
-					{
-						text: 'Ver Detalle',
-						handler: () => {
-							this.notificacionesService.alerta(request.error, "Error", ['alerta-error'], [{ text: 'Cerrar', role: 'aceptar' }]);
-						}
-					}, {
-						text: 'Cerrar',
-						role: 'cancel'
+				opciones = [{
+					text: 'Ver Detalle',
+					handler: () => {
+						this.notificacionesService.alerta(request.error, "Error", ['alerta-error'], [{ text: 'Cerrar', role: 'aceptar' }]);
 					}
-				];
+				}, {
+					text: 'Cerrar',
+					role: 'cancel'
+				}];
 			}
 			this.notificacionesService.alerta(mensaje, encabezado, [], opciones);
 
