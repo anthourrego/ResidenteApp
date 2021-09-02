@@ -166,9 +166,9 @@ export class MiPerfilPage implements OnInit {
 
 	async actualizarFotoPerfil(foto) {
 		const datos = { terceroId: this.terceroId, foto };
-		this.miPerfilService.informacion(datos, this.rutaGeneral + 'fotoPerfil').then(async ({ mensaje, valido, archivo }) => {
+		this.miPerfilService.informacion(datos, this.rutaGeneral + 'fotoPerfil').then(async ({ mensaje, success, archivo }) => {
 			this.notificacionService.notificacion(mensaje);
-			if (valido) {
+			if (success) {
 				this.fotoDePerfil = foto;
 				let user = await this.storage.get('usuario').then(resp => resp);
 				user = this.miPerfilService.desencriptar(JSON.parse(user));
