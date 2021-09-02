@@ -152,9 +152,7 @@ export class MiPerfilPage implements OnInit {
 		}];
 		this.notificacionService.alerta("Seleccionemos tu foto de perfil", null, [], botones).then(({ role }) => {
 			if (role == 'camara' || role == 'galeria') {
-				this.notificacionService.notificacion("Se inicializara la " + role);
 				this.camera.getPicture(this['opciones' + role]).then((imageData) => {
-					this.notificacionService.notificacion("Imagen tomada con exito");
 					this.actualizarFotoPerfil(imageData);
 				}, (err) => {
 					if (err != "No Image Selected") {
@@ -171,10 +169,10 @@ export class MiPerfilPage implements OnInit {
 		this.miPerfilService.informacion(datos, this.rutaGeneral + 'fotoPerfil').then(async ({ mensaje, valido, archivo }) => {
 			this.notificacionService.notificacion(mensaje);
 			if (valido) {
-				this.fotoDePerfil = archivo;
+				this.fotoDePerfil = foto;
 				let user = await this.storage.get('usuario').then(resp => resp);
 				user = this.miPerfilService.desencriptar(JSON.parse(user));
-				user.foto = archivo;
+				user.foto = foto;
 				this.storage.set('usuario', JSON.stringify(user));
 			}
 		}).catch(error => console.log("Error ", error));
