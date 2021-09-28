@@ -128,6 +128,7 @@ export class ServiciosPage implements OnInit {
 			this.obtenerInformacion('obtenerHistorico', 'infoHistorico', datos, event);
 		} else {
 			this.notificacionesService.notificacion("No tiene vivienda asignada.");
+			event.target.complete();
 		}
 	}
 
