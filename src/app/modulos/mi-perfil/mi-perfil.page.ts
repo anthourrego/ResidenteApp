@@ -52,6 +52,7 @@ export class MiPerfilPage implements OnInit {
 	estadoCivil: any = [];
 	datosSeleccionados = {};
 	cambiovalor: boolean;
+	llaveActual: string = '';
 
 	constructor(
 		private notificacionService: NotificacionesService,
@@ -107,10 +108,11 @@ export class MiPerfilPage implements OnInit {
 		Object.keys(this.datosSeleccionados).forEach(it => {
 			this.datosForm[it] = this.datosSeleccionados[it];
 		});
+		console.log("Funciona ", this.datosForm);
 		this.obtenerInformacion('guardarDatos', 'datosGuardados', this.datosForm);
 	}
 
-	async datosGuardados({ mensaje }) {
+	async datosGuardados({ mensaje, ciudades, ciudadesCorre }) {
 		this.notificacionService.notificacion(mensaje);
 		this.subject.next(true);
 		this.datosFormulario.formulario.patchModelValue(this.datosForm);
@@ -120,6 +122,14 @@ export class MiPerfilPage implements OnInit {
 		}
 		this.cambiovalor = !this.cambiovalor;
 		this.suscripcionCambios();
+		console.log('ciudades ', ciudades);
+		if (this.llaveActual == 'dptoid' && ciudades && ciudades.length) {
+			this.localizaciones['ciudades'] = ciudades;
+		}
+		if (this.llaveActual == 'dptocorre' && ciudadesCorre && ciudadesCorre.length) {
+			this.localizaciones['ciudadesCorre'] = ciudadesCorre;
+		}
+		this.datosSeleccionados = {};
 	}
 
 	obtenerInformacion(metodo, funcion, datos = {}, event?) {
@@ -200,6 +210,13 @@ export class MiPerfilPage implements OnInit {
 
 	cambiosComponenteSelect(evento, key) {
 		this.datosSeleccionados[evento.control] = evento.valor[evento.key];
+		this.llaveActual = key;
+		if (evento.key == 'dptoid') {
+			this.datosFormulario.formulario.get('ciudadid').setValue('');
+		}
+		if (evento.key == 'dptocorre') {
+			this.datosFormulario.formulario.get('ciudacorre').setValue('');
+		}
 		this.guardarInformacion();
 	}
 
